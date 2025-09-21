@@ -4,10 +4,12 @@
 
 @section('content')
 <div class="min-h-screen font-sans bg-[#F9F6F1] p-10 text-[#2D1B12]">
+    <!-- Page Title -->
     <h1 class="text-3xl font-bold mb-10 text-center">Admin Dashboard</h1>
 
+    <!-- Error Message -->
     @if(isset($error))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-center">
             {{ $error }}
         </div>
     @endif
@@ -17,10 +19,12 @@
         <!-- Total Sales -->
         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
             <h2 class="text-lg font-semibold mb-2">Total Sales</h2>
-            <p class="text-2xl font-bold text-[#7C4D2B]">Rs.{{ number_format($totalSales ?? 0, 2) }}</p>
+            <p class="text-2xl font-bold text-[#7C4D2B]">
+                Rs.{{ number_format($totalSales ?? 0, 2) }}
+            </p>
         </div>
 
-        <!-- Number of Orders -->
+        <!-- Total Orders -->
         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
             <h2 class="text-lg font-semibold mb-2">Total Orders</h2>
             <p class="text-2xl font-bold text-[#7C4D2B]">{{ $totalOrders ?? 0 }}</p>
@@ -53,12 +57,12 @@
                 [
                     'title' => 'Manage Users',
                     'desc' => 'Handle customer and admin accounts.',
-                    'link' => '#' // Placeholder until users.index route is created
+                    'link' => route('admin.users.index')
                 ],
                 [
                     'title' => 'View Orders',
                     'desc' => 'Track and manage customer orders.',
-                    'link' => '#' // Placeholder until orders.index route is created
+                    'link' => route('admin.orders.index')
                 ]
             ];
         @endphp
@@ -74,10 +78,10 @@
         @endforeach
     </div>
 
-    <!-- Sales Overview Chart (Placeholder) -->
+    <!-- Sales Overview Chart -->
     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
         <h2 class="text-xl font-semibold mb-4">Sales Overview</h2>
-        <div class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-500">
+        <div class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-500 rounded-lg">
             Sales chart coming soon...
         </div>
     </div>

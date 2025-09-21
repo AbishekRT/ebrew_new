@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Item;
 
 class ItemController extends Controller
 {
     // Show all items
     public function index()
     {
-        return view('items.index'); // create resources/views/items/index.blade.php
+        $items = Item::all();
+        return view('items.index', compact('items'));
     }
 
     // Show single item
-    public function show($id)
+    public function show($ItemID)
     {
-        return view('items.show', ['id'=>$id]); // create resources/views/items/show.blade.php
+        $item = Item::where('ItemID', $ItemID)->firstOrFail();
+        return view('items.show', compact('item'));
     }
 }

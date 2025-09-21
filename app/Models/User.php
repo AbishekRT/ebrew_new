@@ -27,7 +27,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // added if you’re using roles like 'admin'/'customer'
+        'Role', // Use correct column name 'Role' instead of 'role'
+        'Phone', // Use correct column name 'Phone' instead of 'phone'  
+        'DeliveryAddress', // Use correct column name 'DeliveryAddress' instead of 'delivery_address'
+        'last_login_at',
+        'last_login_ip',
+        'is_admin',
+        'security_settings',
     ];
 
     /**
@@ -61,7 +67,112 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime',
+            'is_admin' => 'boolean',
+            'security_settings' => 'json',
         ];
+    }
+
+    // ========================
+    // Authentication Relationships
+    // ========================
+
+    /**
+     * Get all login history records for this user
+     */
+    public function loginHistories()
+    {
+        return $this->hasMany(LoginHistory::class);
+    }
+
+    /**
+     * Get recent login attempts (successful and failed)
+     */
+    public function recentLoginAttempts($days = 30)
+    {
+        return $this->hasMany(LoginHistory::class)
+                    ->where('login_at', '>=', now()->subDays($days))
+                    ->orderBy('login_at', 'desc');
+    }
+
+    /**
+     * Get successful login sessions
+     */
+    public function successfulLogins()
+    {
+        return $this->hasMany(LoginHistory::class)
+                    ->where('successful', true);
+    }
+
+    /**
+     * Get failed login attempts
+     */
+    public function failedLoginAttempts()
+    {
+        return $this->hasMany(LoginHistory::class)
+                    ->where('successful', false);
+    }
+
+    // ========================
+    // Query Scopes
+    // ========================
+    
+    /**
+     * Scope to filter users by role
+     */
+    public function scopeRole($query, $role)
+    {
+        return $query->where('Role', $role); // Use correct column name
+    }
+
+    /**
+     * Scope to get users with recent activity
+     */
+    public function scopeActiveUsers($query, $days = 30)
+    {
+        return $query->where('updated_at', '>=', now()->subDays($days))
+                    ->orWhereHas('orders', function ($q) use ($days) {
+                        $q->where('OrderDate', '>=', now()->subDays($days));
+                    });
+    }
+
+    /**
+     * Scope to get users with orders
+     */
+    public function scopeWithOrders($query)
+    {
+        return $query->whereHas('orders');
+    }
+
+    /**
+     * Scope to get high-value customers
+     */
+    public function scopeHighValueCustomers($query, $minAmount = 10000)
+    {
+        return $query->whereHas('orders', function ($q) use ($minAmount) {
+            $q->selectRaw('SUM(SubTotal) as total_spent')
+              ->groupBy('UserID')
+              ->havingRaw('SUM(SubTotal) >= ?', [$minAmount]);
+        });
+    }
+
+    /**
+     * Scope for admin users
+     */
+    public function scopeAdmins($query)
+    {
+        return $query->where('Role', 'admin'); // Use Role column
+    }
+
+    /**
+     * Scope for users with recent suspicious activity
+     */
+    public function scopeSuspiciousActivity($query, $failedAttempts = 5)
+    {
+        return $query->whereHas('failedLoginAttempts', function ($q) use ($failedAttempts) {
+            $q->where('login_at', '>=', now()->subHours(1))
+              ->havingRaw('COUNT(*) >= ?', [$failedAttempts]);
+        });
     }
 
     // ========================
@@ -82,5 +193,127 @@ class User extends Authenticatable
     public function payments()
     {
         return $this->hasManyThrough(Payment::class, Order::class, 'UserID', 'OrderID', 'id', 'OrderID');
+    }
+
+    /**
+     * Get all reviews written by this user
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get items purchased by this user (many-to-many through orders)
+     */
+    public function purchasedItems()
+    {
+        return $this->belongsToMany(Item::class, 'order_items', 'OrderID', 'ItemID')
+                    ->join('orders', 'order_items.OrderID', '=', 'orders.OrderID')
+                    ->where('orders.UserID', $this->id)
+                    ->withPivot('Quantity')
+                    ->distinct();
+    }
+
+    /**
+     * Get user's favorite items (based on multiple purchases)
+     */
+    public function favoriteItems()
+    {
+        return $this->belongsToMany(Item::class, 'order_items', 'OrderID', 'ItemID')
+                    ->join('orders', 'order_items.OrderID', '=', 'orders.OrderID')
+                    ->where('orders.UserID', $this->id)
+                    ->selectRaw('items.*, COUNT(*) as purchase_count, SUM(order_items.Quantity) as total_quantity')
+                    ->groupBy('items.ItemID')
+                    ->having('purchase_count', '>', 1)
+                    ->orderBy('purchase_count', 'desc');
+    }
+
+    // ========================
+    // Authentication Helper Methods
+    // ========================
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->Role === 'admin'; // Check Role column instead of is_admin
+    }
+
+    /**
+     * Get user's security settings
+     */
+    public function getSecuritySettings(): array
+    {
+        return $this->security_settings ?: [];
+    }
+
+    /**
+     * Update security settings
+     */
+    public function updateSecuritySettings(array $settings): void
+    {
+        $currentSettings = $this->getSecuritySettings();
+        $this->update([
+            'security_settings' => array_merge($currentSettings, $settings)
+        ]);
+    }
+
+    /**
+     * Check if user has recent failed login attempts
+     */
+    public function hasRecentFailedAttempts($threshold = 5, $minutes = 60): bool
+    {
+        return $this->failedLoginAttempts()
+                    ->where('login_at', '>=', now()->subMinutes($minutes))
+                    ->count() >= $threshold;
+    }
+
+    /**
+     * Get user's total spent amount
+     */
+    public function totalSpent()
+    {
+        return $this->orders()->sum('SubTotal');
+    }
+
+    /**
+     * Get user's recent orders
+     */
+    public function recentOrders($limit = 5)
+    {
+        return $this->orders()
+                    ->with(['orderItems.item', 'payments'])
+                    ->orderBy('OrderDate', 'desc')
+                    ->limit($limit);
+    }
+
+    /**
+     * Get active session count
+     */
+    public function getActiveSessionCount(): int
+    {
+        return $this->loginHistories()
+                    ->whereNull('logout_at')
+                    ->where('successful', true)
+                    ->count();
+    }
+
+    /**
+     * Get session statistics
+     */
+    public function getSessionStats(): array
+    {
+        $histories = $this->loginHistories()->successful()->get();
+        
+        return [
+            'total_sessions' => $histories->count(),
+            'average_session_duration' => $histories->whereNotNull('session_duration')->avg('session_duration'),
+            'longest_session' => $histories->max('session_duration'),
+            'unique_devices' => $histories->pluck('device_type')->unique()->count(),
+            'unique_browsers' => $histories->pluck('browser')->unique()->count(),
+            'unique_ips' => $histories->pluck('ip_address')->unique()->count(),
+        ];
     }
 }

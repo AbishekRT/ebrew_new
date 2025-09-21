@@ -24,7 +24,7 @@
             @csrf
 
             <!-- Full Name -->
-            <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" required
+            <input type="text" name="full_name" placeholder="Full Name" value="{{ old('full_name') }}" required
                 class="w-full p-2 border border-gray-300 rounded" />
 
             <!-- Email -->

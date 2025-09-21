@@ -6,23 +6,9 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    // Show cart items
+    // Show cart items - now using Livewire
     public function index()
     {
-    return view('cart'); // matches resources/views/cart.blade.php
-    }
-
-    // Add item to cart (dummy)
-    public function add(Request $request, $itemId)
-    {
-        // Logic to add item to cart
-        return redirect()->back()->with('success','Item added to cart!');
-    }
-
-    // Remove item
-    public function remove($itemId)
-    {
-        // Logic to remove item
-        return redirect()->back()->with('success','Item removed!');
+        return view('cart'); // renders cart.blade.php with Livewire component
     }
 }

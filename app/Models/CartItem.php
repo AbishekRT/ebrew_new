@@ -2,17 +2,37 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class CartItem extends Eloquent
+class CartItem extends Model
 {
-    protected $connection = 'mongodb';
-    protected $collection = 'cart_items';
+    use HasFactory;
 
-    protected $fillable = ['cart_id', 'product_id', 'quantity'];
+    protected $table = 'cart_items';
+    // Composite primary key - no single primary key column
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
 
-    public function product()
+    protected $fillable = [
+        'CartID',
+        'ItemID',
+        'Quantity'
+    ];
+
+    public function cart()
     {
-        return $this->belongsTo(Product::class, 'product_id', '_id');
+        return $this->belongsTo(Cart::class, 'CartID', 'CartID');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'ItemID', 'ItemID');
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->Quantity * $this->item->Price;
     }
 }

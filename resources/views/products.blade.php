@@ -26,24 +26,24 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
                 @forelse($products as $product)
-                    <a href="{{ route('products.show', $product['_id']['$oid'] ?? $product['_id']) }}" 
+                    <a href="{{ route('products.show', $product->ItemID) }}" 
                        class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
 
                         <!-- Product Image -->
                         <div class="aspect-w-1 aspect-h-1">
-                            <img src="{{ asset($product['image'] ?? 'images/default.png') }}" 
-                                 alt="{{ $product['name'] ?? 'Product' }}" 
+                            <img src="{{ $product->image_url }}" 
+                                 alt="{{ $product->Name ?? 'Product' }}" 
                                  class="w-full h-full object-contain rounded">
                         </div>
 
                         <!-- Product Name -->
                         <h3 class="text-sm font-semibold text-gray-800 mt-4 group-hover:text-red-600 transition">
-                            {{ $product['name'] ?? 'Unnamed Product' }}
+                            {{ $product->Name ?? 'Unnamed Product' }}
                         </h3>
 
                         <!-- Product Price -->
                         <p class="text-red-600 font-bold mt-2">
-                            Rs. {{ $product['price'] ?? '0.00' }}
+                            Rs. {{ number_format($product->Price ?? 0, 2) }}
                         </p>
                     </a>
                 @empty

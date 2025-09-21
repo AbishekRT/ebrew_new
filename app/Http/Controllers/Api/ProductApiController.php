@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product; // MongoDB Model
+use App\Models\Item; // MySQL Model
 use Illuminate\Http\Request;
 
 class ProductApiController extends Controller
@@ -11,7 +11,7 @@ class ProductApiController extends Controller
     // GET /api/products
     public function index()
     {
-        $products = Product::all();
+        $products = Item::all();
         return response()->json([
             'status' => 'success',
             'data' => $products
@@ -21,7 +21,7 @@ class ProductApiController extends Controller
     // GET /api/products/{id}
     public function show($id)
     {
-        $product = Product::find($id);
+        $product = Item::find($id);
 
         if (!$product) {
             return response()->json([
@@ -40,13 +40,16 @@ class ProductApiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'image' => 'required|string',
-            'description' => 'nullable|string'
+            'Name' => 'required|string|max:255',
+            'Price' => 'required|numeric',
+            'Image' => 'required|string',
+            'Description' => 'nullable|string',
+            'TastingNotes' => 'nullable|string',
+            'ShippingAndReturns' => 'nullable|string',
+            'RoastDates' => 'nullable|string'
         ]);
 
-        $product = Product::create($validated);
+        $product = Item::create($validated);
 
         return response()->json([
             'status' => 'success',
@@ -57,7 +60,7 @@ class ProductApiController extends Controller
     // PUT /api/products/{id} (protected)
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Item::find($id);
 
         if (!$product) {
             return response()->json([
@@ -77,7 +80,7 @@ class ProductApiController extends Controller
     // DELETE /api/products/{id} (protected)
     public function destroy($id)
     {
-        $product = Product::find($id);
+        $product = Item::find($id);
 
         if (!$product) {
             return response()->json([
