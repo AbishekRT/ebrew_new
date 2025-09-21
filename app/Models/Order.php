@@ -23,7 +23,7 @@ class Order extends Model
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class, 'OrderID', 'OrderID');
+        return $this->hasMany(OrderItem::class, 'OrderID', 'OrderID')->with('item');
     }
 
     public function payments()

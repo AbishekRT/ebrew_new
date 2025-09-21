@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FaqController;
+use Illuminate\Support\Facades\Auth;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,3 +64,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     // You can add other authenticated routes here, e.g., profile, cart, orders
 });
+
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();                        // Log out the user
+    $request->session()->invalidate();     // Clear the session
+    $request->session()->regenerateToken(); // Regenerate CSRF token
+    return redirect('/login');              // Redirect user to login page
+
+})->name('logout');

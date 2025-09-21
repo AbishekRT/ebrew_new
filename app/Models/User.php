@@ -12,11 +12,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
+
+    protected $primaryKey = 'id'; // if your users table uses "id"
+    // If you renamed to UserID, change this to: protected $primaryKey = 'UserID';
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'role', // added if you’re using roles like 'admin'/'customer'
     ];
 
     /**
@@ -61,5 +61,25 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // ========================
+    // Relationships
+    // ========================
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'UserID', 'id'); 
+        // if "UserID" is foreign key in carts table
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'UserID', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Order::class, 'UserID', 'OrderID', 'id', 'OrderID');
     }
 }

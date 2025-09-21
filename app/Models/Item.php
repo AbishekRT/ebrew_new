@@ -14,8 +14,13 @@ class Item extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Name', 'Description', 'Price', 'TastingNotes', 
-        'ShippingAndReturns', 'RoastDates', 'Image'
+        'Name',
+        'Description',
+        'Price',
+        'TastingNotes',
+        'ShippingAndReturns',
+        'RoastDates',
+        'Image'
     ];
 
     // Relationships
@@ -27,5 +32,11 @@ class Item extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'ItemID', 'ItemID');
+    }
+
+    // Optional accessor example: formatted price
+    public function getFormattedPriceAttribute()
+    {
+        return 'LKR ' . number_format($this->Price, 2);
     }
 }

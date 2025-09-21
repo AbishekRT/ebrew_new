@@ -14,13 +14,12 @@
 
         <!-- Navigation Links (Customer only) -->
         @if (! $isAdmin)
-             <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-800">
-                 <a href="{{ route('home') }}" class="hover:text-yellow-900 transition">Home</a>
+            <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-800">
+                <a href="{{ route('home') }}" class="hover:text-yellow-900 transition">Home</a>
                 <a href="{{ route('products.index') }}" class="hover:text-yellow-900 transition">Products</a>
                 <a href="{{ route('faq') }}" class="hover:text-yellow-900 transition">FAQ</a>
             </div>
         @endif
-
 
         <!-- Right Side -->
         <div class="flex items-center space-x-4 text-gray-700">
@@ -32,11 +31,14 @@
                     @csrf
                     <button class="hover:text-yellow-900 text-sm font-medium">Logout</button>
                 </form>
+
                 @if (! $isAdmin)
-                    <a href="{{ route('cart.index') }}" class="text-xl hover:text-yellow-900">
+                    {{-- Cart link temporarily removed until cart page is created --}}
+                    {{-- <a href="{{ route('cart.index') }}" class="text-xl hover:text-yellow-900">
                         <i class="fas fa-shopping-cart"></i>
-                    </a>
+                    </a> --}}
                 @endif
+
                 <a href="{{ $isAdmin ? '#' : route('home') }}" class="text-xl hover:text-yellow-900">
                     <i class="fas fa-user-circle"></i>
                 </a>
@@ -50,8 +52,8 @@
 <div class="md:hidden border-b border-gray-100 px-4 py-2 text-sm font-medium text-gray-700 bg-white">
     <div class="flex space-x-6 justify-center">
         <a href="{{ route('home') }}" class="hover:text-yellow-900">Home</a>
-                <a href="{{ route('products.index') }}" class="hover:text-yellow-900 transition">Products</a>
-                <a href="{{ route('faq') }}" class="hover:text-yellow-900 transition">FAQ</a>
-            </div>
+        <a href="{{ route('products.index') }}" class="hover:text-yellow-900 transition">Products</a>
+        <a href="{{ route('faq') }}" class="hover:text-yellow-900 transition">FAQ</a>
+    </div>
 </div>
 @endif

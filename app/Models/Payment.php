@@ -20,4 +20,10 @@ class Payment extends Model
     {
         return $this->belongsTo(Order::class, 'OrderID', 'OrderID');
     }
+
+    // Optional helper: check if payment is complete
+    public function getIsPaidAttribute()
+    {
+        return strtolower($this->PaymentStatus) === 'paid';
+    }
 }
