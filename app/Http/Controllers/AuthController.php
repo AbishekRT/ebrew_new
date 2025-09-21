@@ -24,8 +24,11 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            // Regenerate session to prevent fixation
             $request->session()->regenerate();
-            return redirect()->intended('/'); // redirect to home/dashboard
+
+            // Redirect to intended page if user tried accessing a protected route, else to dashboard
+            return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors([
@@ -54,7 +57,7 @@ class AuthController extends Controller
         $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed', // password confirmation
+            'password' => 'required|string|min:6|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
         ]);

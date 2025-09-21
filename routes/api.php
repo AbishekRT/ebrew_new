@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductApiController;
-use App\Http\Controllers\Api\CartController;
+// use App\Http\Controllers\Api\CartApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +24,13 @@ Route::prefix('products')->group(function () {
 */
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Cart APIs
-    Route::get('/cart', [CartController::class, 'index']);             // Get current user's cart
-    Route::post('/cart/add', [CartController::class, 'add']);          // Add item to cart
-    Route::post('/cart/update', [CartController::class, 'update']);    // Update cart item quantity
-    Route::post('/cart/remove', [CartController::class, 'remove']);    // Remove item from cart
+    // Cart APIs - TODO: Implement CartApiController
+    /*
+    Route::get('/cart', [CartApiController::class, 'index']);             // Get current user's cart
+    Route::post('/cart/add', [CartApiController::class, 'add']);          // Add item to cart
+    Route::post('/cart/update', [CartApiController::class, 'update']);    // Update cart item quantity
+    Route::post('/cart/remove', [CartApiController::class, 'remove']);    // Remove item from cart
+    */
 
     // Product Management APIs (optional, admin-only)
     Route::post('/products', [ProductApiController::class, 'store']);        // Create product

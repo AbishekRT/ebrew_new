@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Product;
+use App\Models\ProductMySQL;
 use App\Models\Order;
 
 class DashboardController extends Controller
@@ -15,13 +15,18 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         // Example: Fetch last 3 orders of this user
-        $orders = Order::where('user_id', $user->id)
-                        ->latest()
+        $orders = Order::where('UserID', $user->id)
+                        ->orderBy('OrderDate', 'desc')
                         ->take(3)
                         ->get();
 
-        // Example: Fetch random 3 recommended products
-        $recommended = Product::inRandomOrder()->take(3)->get();
+        // Fetch random 3 recommended products from MySQL
+        try {
+            $recommended = ProductMySQL::inRandomOrder()->take(3)->get();
+        } catch (\Exception $e) {
+            // If there's any issue, just set empty collection
+            $recommended = collect([]);
+        }
 
         return view('dashboard', compact('user', 'orders', 'recommended'));
     }

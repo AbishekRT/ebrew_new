@@ -12,7 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Configure auth middleware to redirect to custom login route
+        $middleware->redirectUsersTo(fn () => route('login'));
+        
+        // Register custom middleware
+        $middleware->alias([
+            'isAdmin' => \App\Http\Middleware\IsAdminMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

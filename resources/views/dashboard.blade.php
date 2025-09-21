@@ -37,11 +37,11 @@
                     <tbody>
                         @forelse($orders as $order)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium">#{{ $order->id }}</td>
-                                <td class="px-4 py-3">{{ $order->created_at->format('M d, Y') }}</td>
-                                <td class="px-4 py-3">{{ $order->items_summary }}</td>
-                                <td class="px-4 py-3">Rs {{ number_format($order->total, 2) }}</td>
-                                <td class="px-4 py-3 text-green-600 font-semibold">{{ $order->status }}</td>
+                                <td class="px-4 py-3 font-medium">#{{ $order->OrderID }}</td>
+                                <td class="px-4 py-3">{{ \Carbon\Carbon::parse($order->OrderDate)->format('M d, Y') }}</td>
+                                <td class="px-4 py-3">{{ $order->items_summary ?? 'N/A' }}</td>
+                                <td class="px-4 py-3">Rs {{ number_format($order->SubTotal ?? 0, 2) }}</td>
+                                <td class="px-4 py-3 text-green-600 font-semibold">{{ $order->status ?? 'Pending' }}</td>
                             </tr>
                         @empty
                             <tr><td colspan="5" class="px-4 py-3 text-gray-500">No orders found.</td></tr>
@@ -58,9 +58,9 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             @forelse($recommended as $product)
                 <div class="border rounded-xl p-4 shadow hover:shadow-md text-center transition duration-300">
-                    <img src="{{ asset('images/uploads/'.$product->id.'.png') }}" class="h-32 w-32 mx-auto mb-3 rounded object-cover">
-                    <p class="font-semibold text-gray-800">{{ $product->name }}</p>
-                    <p class="text-sm text-gray-500">Rs {{ number_format($product->price, 2) }}</p>
+                    <img src="{{ asset('images/uploads/'.$product->ProductID.'.png') }}" class="h-32 w-32 mx-auto mb-3 rounded object-cover">
+                    <p class="font-semibold text-gray-800">{{ $product->Name }}</p>
+                    <p class="text-sm text-gray-500">Rs {{ number_format($product->Price, 2) }}</p>
                     <button class="mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded text-sm">Add to Cart</button>
                 </div>
             @empty

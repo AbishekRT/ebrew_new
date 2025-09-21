@@ -6,18 +6,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FaqController;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
-
-Route::view('/cart', 'cart')->name('cart');
 
 // Home
 Route::get('/', fn() => view('home'))->name('home');
@@ -32,24 +31,29 @@ Route::get('/items', [ItemController::class, 'index'])->name('items.index');
 // FAQ
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
+// Cart (publicly accessible)
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+// Authentication
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
 /*
 |--------------------------------------------------------------------------
 | Email Verification Routes
 |--------------------------------------------------------------------------
 */
-
-// Show verification notice
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-// Handle the verification link
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill(); // marks email as verified
-    return redirect('/dashboard');
+    $request->fulfill();
+    return redirect()->route('dashboard');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-// Resend verification link
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'verification-link-sent');
@@ -60,13 +64,25 @@ Route::post('/email/verification-notification', function (Request $request) {
 | Authenticated Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    // You can add other authenticated routes here, e.g., profile, cart, orders
+Route::middleware(['auth'])->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::post('/logout', function (Request $request) {
-    Auth::logout();                        // Log out the user
-    $request->session()->invalidate();     // Clear the session
-    $request->session()->regenerateToken(); // Regenerate CSRF token
-    return redirect('/login');              // Redirect user to login page
-})->name('logout');
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'isAdmin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+});

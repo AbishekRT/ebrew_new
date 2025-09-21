@@ -9,7 +9,7 @@ class CartController extends Controller
     // Show cart items
     public function index()
     {
-        return view('cart.index'); // create resources/views/cart/index.blade.php
+    return view('cart'); // matches resources/views/cart.blade.php
     }
 
     // Add item to cart (dummy)

@@ -1,51 +1,52 @@
-<x-guest-layout>
-    <main class="max-w-md mx-auto mt-20 mb-20 bg-white p-6 rounded shadow">
-        <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        {{-- Display session feedback messages --}}
-        @if (session('success'))
-            <p class="bg-green-100 text-green-700 p-2 rounded text-sm text-center mb-4">
-                {{ session('success') }}
-            </p>
-        @endif
+    <title>@yield('title', config('app.name', 'eBrew Café'))</title>
 
-        {{-- Display validation errors --}}
-        @if ($errors->any())
-            <div class="bg-red-100 text-red-700 p-2 rounded text-sm text-center mb-4">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <form action="{{ route('login') }}" method="POST" class="space-y-4">
-            @csrf
-            <input type="email" name="email" placeholder="Email" required
-                class="w-full p-2 border border-gray-300 rounded" />
-            <input type="password" name="password" placeholder="Password" required
-                class="w-full p-2 border border-gray-300 rounded" />
-            
-            <div class="flex items-center justify-between mt-2">
-                <label class="flex items-center">
-                    <input type="checkbox" name="remember" class="mr-2">
-                    Remember me
-                </label>
-                @if (Route::has('password.request'))
-                    <a class="text-sm text-blue-600 hover:underline" href="{{ route('password.request') }}">
-                        Forgot your password?
-                    </a>
-                @endif
-            </div>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-pbVd4V1sNn6gQG1YfV9F3U8Cn5C9I6y5n2/mcVnOqXPEyYo8rkQ1dIQp+hGhRYGq2C+Uo5c6Yq6Bz3T2Xoxq8w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-            <button type="submit" class="bg-[#2d0d1c] hover:bg-[#4a1a33] text-white px-4 py-2 rounded w-full">
-                Login
-            </button>
-        </form>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        <p class="mt-4 text-center">Don't have an account?
-            <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register here</a>
-        </p>
+    <!-- Styles -->
+    @livewireStyles
+</head>
+<body class="font-sans text-gray-900 antialiased bg-gray-100">
+
+    {{-- Add Header --}}
+    @include('partials.header')
+
+    {{-- Main Content Area --}}
+    <main class="min-h-screen">
+        @yield('content')
     </main>
-</x-guest-layout>
+
+    {{-- Add Footer --}}
+    @include('partials.footer')
+
+    @livewireScripts
+    
+    <script>
+        // Handle cart link clicks to prevent unnecessary page reload when already on cart page
+        function handleCartClick(event) {
+            // Check if we're already on the cart page
+            if (window.location.pathname === '/cart') {
+                event.preventDefault();
+                // Optional: Show a message or simply do nothing
+                console.log('Already on cart page');
+                return false;
+            }
+            return true; // Allow normal navigation
+        }
+    </script>
+</body>
+</html>
