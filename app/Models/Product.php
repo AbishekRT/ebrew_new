@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model as Eloquent;
 
-class Product extends Model
+class Product extends Eloquent
 {
-    protected $connection = 'mongodb'; // matches database.php
-    protected $collection = 'products'; // your MongoDB collection name
+    protected $connection = 'mongodb';
+    protected $collection = 'products';
 
     protected $fillable = [
         'name', 'price', 'image', 'description',

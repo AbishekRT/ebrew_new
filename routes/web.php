@@ -7,15 +7,17 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FaqController;
 use Illuminate\Support\Facades\Auth;
-
-
-
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+
+Route::view('/cart', 'cart')->name('cart');
 
 // Home
 Route::get('/', fn() => view('home'))->name('home');
@@ -59,17 +61,12 @@ Route::post('/email/verification-notification', function (Request $request) {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
-
     // You can add other authenticated routes here, e.g., profile, cart, orders
 });
-
 
 Route::post('/logout', function (Request $request) {
     Auth::logout();                        // Log out the user
     $request->session()->invalidate();     // Clear the session
     $request->session()->regenerateToken(); // Regenerate CSRF token
     return redirect('/login');              // Redirect user to login page
-
 })->name('logout');

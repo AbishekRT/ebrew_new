@@ -8,7 +8,7 @@
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.10",
-        "jenssegers/mongodb": "*",
+        "jenssegers/mongodb": "^5.5",
         "laravel/framework": "^12.0",
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.2",
