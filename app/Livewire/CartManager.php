@@ -244,13 +244,14 @@ class CartManager extends Component
         $this->notificationMessage = $message;
         $this->showNotification = true;
         
-        // Auto-hide notification after 3 seconds
-        $this->dispatch('hideNotification');
+        // Auto-hide after 4 seconds
+        $this->dispatch('startNotificationTimer');
     }
 
     public function hideNotification()
     {
         $this->showNotification = false;
+        $this->notificationMessage = '';
     }
 
     public function render()
