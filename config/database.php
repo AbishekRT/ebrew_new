@@ -113,6 +113,16 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+'mongodb' => [
+    'driver'   => 'mongodb',
+    'dsn'      => env('MONGO_DB_URI'),        // Use the Atlas connection string
+    'database' => env('MONGO_DB_DATABASE'),   // Database name in Atlas
+    'options'  => [
+        'database' => env('MONGO_DB_AUTH_DATABASE', 'admin'), // Auth DB
+    ],
+],
+
+
     ],
 
     /*

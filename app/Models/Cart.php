@@ -2,27 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class Cart extends Model
+class Cart extends Eloquent
 {
-    use HasFactory;
+    protected $connection = 'mongodb';
+    protected $collection = 'carts';
 
-    protected $table = 'carts';
-    protected $primaryKey = 'CartID';
-    public $timestamps = false;
+    protected $fillable = ['user_id'];
 
-    protected $fillable = ['UserID'];
-
-    // Relationships
-    public function user()
+    public function items()
     {
-        return $this->belongsTo(User::class, 'UserID', 'UserID');
-    }
-
-    public function cartItems()
-    {
-        return $this->hasMany(CartItem::class, 'CartID', 'CartID')->with('item');
+        return $this->hasMany(CartItem::class, 'cart_id', '_id');
     }
 }

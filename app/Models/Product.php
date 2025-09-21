@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+    protected $connection = 'mongodb'; // matches database.php
+    protected $collection = 'products'; // your MongoDB collection name
 
-    protected $table = 'products';
-    protected $primaryKey = 'ProductID';
-    public $timestamps = false;
-
-    protected $fillable = ['Name', 'Description', 'Price', 'Image'];
+    protected $fillable = [
+        'name', 'price', 'image', 'description',
+        'tastingNotes', 'shippingAndReturns', 'roastDates'
+    ];
 }

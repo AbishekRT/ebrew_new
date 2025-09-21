@@ -23,26 +23,36 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <span class="w-2 h-6 bg-red-600 inline-block mr-3 rounded"></span>{{ $category }}
             </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
 
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
                 @forelse($products as $product)
-                    <a href="{{ route('products.show', $product->ItemID) }}" 
+                    <a href="{{ route('products.show', $product['_id']['$oid'] ?? $product['_id']) }}" 
                        class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
+
+                        <!-- Product Image -->
                         <div class="aspect-w-1 aspect-h-1">
-                            <img src="{{ asset($product->Image) }}" 
-                                 alt="{{ $product->Name }}" 
+                            <img src="{{ asset($product['image'] ?? 'images/default.png') }}" 
+                                 alt="{{ $product['name'] ?? 'Product' }}" 
                                  class="w-full h-full object-contain rounded">
                         </div>
-                        <h3 class="text-sm font-semibold text-gray-800 mt-4 group-hover:text-red-600 transition">{{ $product->Name }}</h3>
-                        <p class="text-red-600 font-bold mt-2">Rs. {{ $product->Price }}</p>
+
+                        <!-- Product Name -->
+                        <h3 class="text-sm font-semibold text-gray-800 mt-4 group-hover:text-red-600 transition">
+                            {{ $product['name'] ?? 'Unnamed Product' }}
+                        </h3>
+
+                        <!-- Product Price -->
+                        <p class="text-red-600 font-bold mt-2">
+                            Rs. {{ $product['price'] ?? '0.00' }}
+                        </p>
                     </a>
                 @empty
                     <p class="text-gray-500">No products available.</p>
                 @endforelse
-
             </div>
         </div>
     @endforeach
+
 </section>
 
 @endsection
