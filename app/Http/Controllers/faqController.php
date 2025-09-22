@@ -23,7 +23,21 @@ class FaqController extends Controller
             
             "Do you offer subscriptions?" => "Yes, we offer flexible subscription plans that deliver fresh coffee to your door at regular intervals. Choose from weekly, bi-weekly, or monthly deliveries. Subscribers enjoy a 10% discount on all orders and can easily modify, pause, or cancel their subscription at any time through their account dashboard.",
             
-            "Is your packaging eco-friendly?" => "We are committed to sustainability and use eco-friendly packaging materials whenever possible. Our coffee bags are made from recyclable materials with biodegradable valves. We're continuously working to reduce our environmental footprint by exploring new sustainable packaging options and minimizing waste in our operations."
+            "Is your packaging eco-friendly?" => "We are committed to sustainability and use eco-friendly packaging materials whenever possible. Our coffee bags are made from recyclable materials with biodegradable valves. We're continuously working to reduce our environmental footprint by exploring new sustainable packaging options and minimizing waste in our operations.",
+
+            "What roast levels do you offer?" => "We offer light, medium, medium-dark, and dark roast profiles. Light roasts highlight origin characteristics and bright acidity, medium roasts provide balanced flavor, medium-dark roasts offer fuller body with some roast character, and dark roasts deliver bold, smoky flavors. Each roast level is carefully crafted to bring out the best in our premium beans.",
+
+            "Do you accept returns or exchanges?" => "We stand behind our coffee quality. If you're not satisfied with your purchase, we offer a 30-day satisfaction guarantee. Contact our customer service team within 30 days of purchase for returns or exchanges. We'll provide a full refund or exchange for unopened bags, and we'll work with you on opened products to ensure your satisfaction.",
+
+            "Can I visit your roastery?" => "Absolutely! We love sharing our passion for coffee. Our roastery offers guided tours every Saturday at 10 AM and 2 PM. You'll learn about our roasting process, cup different coffees, and see our equipment in action. Tours are free but require advance booking through our website or by calling our customer service team.",
+
+            "What payment methods do you accept?" => "We accept all major credit cards (Visa, MasterCard, American Express, Discover), PayPal, Apple Pay, Google Pay, and bank transfers. For wholesale orders, we also offer net payment terms to qualified businesses. All transactions are processed securely through encrypted payment systems to protect your financial information.",
+
+            "Do you offer wholesale pricing?" => "Yes, we offer competitive wholesale pricing for cafés, restaurants, offices, and retail stores. Our wholesale program includes volume discounts, custom roasting profiles, private labeling options, and dedicated account management. Minimum order quantities apply. Contact our wholesale team for a personalized quote and program details.",
+
+            "How do I track my order?" => "Once your order ships, you'll receive an email with tracking information and a link to monitor your package's progress. You can also track orders by logging into your account on our website and viewing your order history. If you have any issues with tracking, our customer service team is happy to help locate your shipment.",
+
+            "What's your caffeine content?" => "Caffeine content varies by bean origin and roast level. On average, our coffee contains 95-200mg of caffeine per 8oz cup. Light roasts typically have slightly more caffeine than dark roasts. We also offer decaffeinated options processed using the Swiss Water method, which removes 99.9% of caffeine while preserving flavor compounds."
         ];
 
         return view('faq', compact('faqs'));
