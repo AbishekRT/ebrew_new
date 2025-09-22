@@ -39,11 +39,6 @@ class DashboardController extends Controller
             $behaviorPatterns = UserAnalytics::getBehaviorPatterns($user->id, 30);
             $anomalyData = UserAnalytics::detectAnomalies($user->id);
             
-            // MongoDB UserFavorites - AI-powered Recommendations
-            $userFavorites = UserFavorites::where('user_id', $user->id)->first();
-            $personalizedRecommendations = UserFavorites::getPersonalizedRecommendations($user->id, 6);
-            $preferencesAnalysis = UserFavorites::analyzePreferences($user->id);
-            
         } catch (\Exception $e) {
             // Fallback if MongoDB is not connected - still show dashboard
             $userAnalytics = [
@@ -55,9 +50,6 @@ class DashboardController extends Controller
             ];
             $behaviorPatterns = [];
             $anomalyData = ['anomaly_score' => 0];
-            $userFavorites = null;
-            $personalizedRecommendations = collect([]);
-            $preferencesAnalysis = null;
         }
 
         // Enhanced user statistics
@@ -70,28 +62,16 @@ class DashboardController extends Controller
             'active_sessions' => $user->getActiveSessionCount(),
         ];
 
-        // Sanctum API tokens information
-        $apiTokens = $user->tokens()
-            ->where('expires_at', '>', now())
-            ->orWhereNull('expires_at')
-            ->orderBy('last_used_at', 'desc')
-            ->take(5)
-            ->get();
-
         return view('dashboard', compact(
             // Existing data (preserved)
             'user', 
             'orders', 
             'recommended',
-            // New MongoDB & Sanctum data
+            // MongoDB security data
             'userAnalytics',
             'behaviorPatterns',
             'anomalyData',
-            'userFavorites',
-            'personalizedRecommendations',
-            'preferencesAnalysis',
-            'userStats',
-            'apiTokens'
+            'userStats'
         ));
     }
 }

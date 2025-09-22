@@ -275,7 +275,7 @@ class User extends Authenticatable
      */
     public function totalSpent()
     {
-        return $this->orders()->sum('SubTotal');
+        return $this->orders()->sum('SubTotal') ?? 0.0;
     }
 
     /**
@@ -290,14 +290,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Get active session count
+     * Get active session count - enhanced for dashboard
      */
     public function getActiveSessionCount(): int
     {
-        return $this->loginHistories()
-                    ->whereNull('logout_at')
-                    ->where('successful', true)
-                    ->count();
+        try {
+            return $this->loginHistories()
+                        ->whereNull('logout_at')
+                        ->where('successful', true)
+                        ->where('login_at', '>=', now()->subDays(30))
+                        ->count();
+        } catch (\Exception $e) {
+            // Fallback if LoginHistory doesn't exist yet
+            return $this->tokens()->where('last_used_at', '>=', now()->subHours(24))->count();
+        }
     }
 
     /**
