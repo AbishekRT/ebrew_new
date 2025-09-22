@@ -10,26 +10,29 @@ class CartItem extends Model
     use HasFactory;
 
     protected $table = 'cart_items';
-    
+    // Composite primary key - no single primary key column
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
     protected $fillable = [
-        'cart_id',
-        'item_id',
-        'quantity',
-        'price'
+        'CartID',
+        'ItemID',
+        'Quantity'
     ];
 
     public function cart()
     {
-        return $this->belongsTo(Cart::class, 'cart_id', 'id');
+        return $this->belongsTo(Cart::class, 'CartID', 'CartID');
     }
 
     public function item()
     {
-        return $this->belongsTo(Item::class, 'item_id', 'ItemID');
+        return $this->belongsTo(Item::class, 'ItemID', 'ItemID');
     }
 
     public function getTotalAttribute()
     {
-        return $this->quantity * $this->price;
+        return $this->Quantity * $this->item->Price;
     }
 }

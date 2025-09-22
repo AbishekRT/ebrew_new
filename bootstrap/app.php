@@ -18,6 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register custom middleware
         $middleware->alias([
             'isAdmin' => \App\Http\Middleware\IsAdminMiddleware::class,
+            'api.analytics' => \App\Http\Middleware\ApiAnalyticsMiddleware::class,
+        ]);
+
+        // Apply API analytics middleware to API routes
+        $middleware->group('api', [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ApiAnalyticsMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

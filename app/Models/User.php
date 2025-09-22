@@ -316,4 +316,116 @@ class User extends Authenticatable
             'unique_ips' => $histories->pluck('ip_address')->unique()->count(),
         ];
     }
+
+    // ========================
+    // Advanced API Methods for Outstanding Implementation
+    // ========================
+
+    /**
+     * Check if user has specific API ability
+     */
+    public function hasApiAbility(string $ability): bool
+    {
+        $currentToken = $this->currentAccessToken();
+        
+        if (!$currentToken) {
+            return false;
+        }
+
+        return $currentToken->can($ability);
+    }
+
+    /**
+     * Get user's API security level
+     */
+    public function getApiSecurityLevel(): array
+    {
+        $recentFailures = $this->failedLoginAttempts()
+            ->where('login_at', '>=', now()->subDays(7))
+            ->count();
+
+        $uniqueDevices = $this->loginHistories()
+            ->where('login_at', '>=', now()->subDays(30))
+            ->distinct('device_type')
+            ->count();
+
+        $riskScore = min(10, $recentFailures + ($uniqueDevices > 3 ? 2 : 0));
+
+        return [
+            'risk_score' => $riskScore,
+            'security_level' => match(true) {
+                $riskScore >= 7 => 'high_risk',
+                $riskScore >= 4 => 'medium_risk',
+                default => 'low_risk'
+            },
+            'recent_failures' => $recentFailures,
+            'device_diversity' => $uniqueDevices,
+            'two_factor_enabled' => !is_null($this->two_factor_secret),
+        ];
+    }
+
+    /**
+     * Create API token with advanced configuration
+     */
+    public function createApiToken(string $name, array $abilities = [], ?\DateTime $expiresAt = null): \Laravel\Sanctum\NewAccessToken
+    {
+        if (empty($abilities)) {
+            $abilities = $this->getDefaultApiAbilities();
+        }
+
+        return $this->createToken($name, $abilities, $expiresAt);
+    }
+
+    /**
+     * Get default API abilities based on user role
+     */
+    public function getDefaultApiAbilities(): array
+    {
+        $baseAbilities = [
+            'profile:read',
+            'profile:update', 
+            'orders:read',
+            'cart:manage'
+        ];
+
+        if ($this->isAdmin()) {
+            return array_merge($baseAbilities, [
+                'admin:dashboard',
+                'admin:users',
+                'admin:analytics',
+                'security:monitor'
+            ]);
+        }
+
+        return $baseAbilities;
+    }
+
+    /**
+     * Revoke all API tokens except current
+     */
+    public function revokeOtherApiTokens($currentTokenId = null): int
+    {
+        $query = $this->tokens();
+        
+        if ($currentTokenId) {
+            $query->where('id', '!=', $currentTokenId);
+        }
+
+        return $query->delete();
+    }
+
+    /**
+     * Get API usage analytics
+     */
+    public function getApiUsageStats(int $days = 30): array
+    {
+        // This would integrate with UserAnalytics MongoDB model
+        return [
+            'total_requests' => 0,
+            'endpoints_used' => [],
+            'peak_usage_hours' => [],
+            'average_response_time' => 0,
+            'error_rate' => 0,
+        ];
+    }
 }

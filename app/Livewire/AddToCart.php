@@ -51,25 +51,24 @@ class AddToCart extends Component
             if (Auth::check()) {
                 // Authenticated user - save to database
                 \Log::info('AddToCart: Authenticated user cart');
-                $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
-                \Log::info('AddToCart: Cart created/found', ['cart_id' => $cart->id]);
+                $cart = Cart::firstOrCreate(['UserID' => Auth::id()]);
+                \Log::info('AddToCart: Cart created/found', ['cart_id' => $cart->CartID]);
                 
-                $existingCartItem = CartItem::where('cart_id', $cart->id)
-                    ->where('item_id', $this->item->ItemID)
+                $existingCartItem = CartItem::where('CartID', $cart->CartID)
+                    ->where('ItemID', $this->item->ItemID)
                     ->first();
 
                 if ($existingCartItem) {
                     \Log::info('AddToCart: Updating existing item');
                     $existingCartItem->update([
-                        'quantity' => $existingCartItem->quantity + $this->quantity
+                        'Quantity' => $existingCartItem->Quantity + $this->quantity
                     ]);
                 } else {
                     \Log::info('AddToCart: Creating new cart item');
                     CartItem::create([
-                        'cart_id' => $cart->id,
-                        'item_id' => $this->item->ItemID,
-                        'quantity' => $this->quantity,
-                        'price' => $this->item->Price
+                        'CartID' => $cart->CartID,
+                        'ItemID' => $this->item->ItemID,
+                        'Quantity' => $this->quantity
                     ]);
                 }
             } else {
@@ -115,15 +114,11 @@ class AddToCart extends Component
     {
         $this->notificationMessage = $message;
         $this->showNotification = true;
-        
-        // Auto-hide after 4 seconds
-        $this->dispatch('startNotificationTimer');
     }
 
     public function hideNotification()
     {
         $this->showNotification = false;
-        $this->notificationMessage = '';
     }
 
     public function render()

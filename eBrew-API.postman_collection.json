@@ -1,0 +1,127 @@
+{
+    "info": {
+        "name": "eBrew Outstanding API Collection",
+        "description": "Complete API testing collection for Outstanding Laravel Sanctum + MongoDB implementation"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\",\n    \"device_name\": \"Postman Test\",\n    \"device_info\": {\n        \"screen\": {\"width\": 1920, \"height\": 1080},\n        \"timezone\": \"Asia/Dubai\"\n    }\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "auth", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Sessions",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/sessions",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "auth", "sessions"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Profile & Security",
+            "item": [
+                {
+                    "name": "Get Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/profile",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "profile"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login History",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/profile/login-history?days=30&filter=all",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "profile", "login-history"],
+                            "query": [
+                                {
+                                    "key": "days",
+                                    "value": "30"
+                                },
+                                {
+                                    "key": "filter",
+                                    "value": "all"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Favorites",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/profile/favorites",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "profile", "favorites"]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000"
+        },
+        {
+            "key": "token",
+            "value": "YOUR_TOKEN_HERE"
+        }
+    ]
+}

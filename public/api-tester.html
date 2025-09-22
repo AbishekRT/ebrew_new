@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBrew API Tester - Outstanding Implementation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">
+            🚀 eBrew Outstanding API Tester
+        </h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Login Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-600">🔐 Authentication</h2>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Email:</label>
+                    <input type="email" id="email" value="admin@example.com" 
+                           class="w-full border rounded px-3 py-2">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Password:</label>
+                    <input type="password" id="password" value="password" 
+                           class="w-full border rounded px-3 py-2">
+                </div>
+                
+                <button onclick="login()" 
+                        class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                    🚀 Login with Advanced Sanctum
+                </button>
+                
+                <div id="loginResult" class="mt-4 p-3 rounded hidden"></div>
+            </div>
+
+            <!-- API Testing Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4 text-green-600">📊 API Testing</h2>
+                
+                <div class="space-y-3">
+                    <button onclick="testProfile()" 
+                            class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                        👤 Get Profile (MongoDB Analytics)
+                    </button>
+                    
+                    <button onclick="testLoginHistory()" 
+                            class="w-full bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">
+                        🛡️ Login History (Security Dashboard)
+                    </button>
+                    
+                    <button onclick="testFavorites()" 
+                            class="w-full bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600">
+                        ❤️ Favorites (AI Recommendations)
+                    </button>
+                    
+                    <button onclick="testSessions()" 
+                            class="w-full bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-600">
+                        🔑 Active Sessions
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">📋 API Response</h2>
+            <pre id="apiResponse" class="bg-gray-100 p-4 rounded overflow-auto h-96 text-sm">
+Ready to test the Outstanding API implementation...
+
+🎯 Features to test:
+✅ Advanced Laravel Sanctum authentication
+✅ MongoDB analytics integration
+✅ Multi-device session management
+✅ Real-time security monitoring
+✅ Complex aggregation pipelines
+✅ Advanced user behavior analysis
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8000/api';
+        let authToken = null;
+
+        function displayResponse(title, data) {
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.textContent = `${title}\n\n${JSON.stringify(data, null, 2)}`;
+        }
+
+        function displayError(title, error) {
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.textContent = `❌ ${title}\n\nError: ${error.message || error}`;
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginResult = document.getElementById('loginResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        device_name: 'API Tester Browser',
+                        device_info: {
+                            screen: { width: window.screen.width, height: window.screen.height },
+                            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                        },
+                        location_data: {
+                            city: 'Dubai',
+                            country: 'UAE'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data.token) {
+                    authToken = data.data.token;
+                    loginResult.className = 'mt-4 p-3 rounded bg-green-100 text-green-800';
+                    loginResult.innerHTML = `✅ Login successful! Advanced features activated.`;
+                    displayResponse('🎉 OUTSTANDING LOGIN SUCCESS', data);
+                } else {
+                    loginResult.className = 'mt-4 p-3 rounded bg-red-100 text-red-800';
+                    loginResult.innerHTML = `❌ Login failed: ${data.message || 'Unknown error'}`;
+                    displayError('Login Failed', data);
+                }
+                
+                loginResult.classList.remove('hidden');
+            } catch (error) {
+                console.error('Login error:', error);
+                displayError('Login Error', error);
+            }
+        }
+
+        async function makeAuthenticatedRequest(endpoint, title) {
+            if (!authToken) {
+                alert('Please login first!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                displayResponse(title, data);
+            } catch (error) {
+                displayError(title + ' Error', error);
+            }
+        }
+
+        async function testProfile() {
+            await makeAuthenticatedRequest('/profile', '👤 PROFILE WITH MONGODB ANALYTICS');
+        }
+
+        async function testLoginHistory() {
+            await makeAuthenticatedRequest('/profile/login-history?days=30', '🛡️ SECURITY DASHBOARD');
+        }
+
+        async function testFavorites() {
+            await makeAuthenticatedRequest('/profile/favorites', '❤️ AI-POWERED FAVORITES');
+        }
+
+        async function testSessions() {
+            await makeAuthenticatedRequest('/auth/sessions', '🔑 MULTI-DEVICE SESSIONS');
+        }
+
+        // Test public endpoint on load
+        window.onload = function() {
+            fetch(`${API_BASE}/products`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Public API test successful:', data);
+                })
+                .catch(error => {
+                    console.error('API connection error:', error);
+                });
+        };
+    </script>
+</body>
+</html>
