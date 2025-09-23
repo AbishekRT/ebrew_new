@@ -27,8 +27,16 @@ class AuthController extends Controller
             // Regenerate session to prevent fixation
             $request->session()->regenerate();
 
-            // Redirect to intended page if user tried accessing a protected route, else to dashboard
-            return redirect()->intended('/dashboard');
+            // Check user role and redirect accordingly
+            $user = Auth::user();
+            
+            if ($user->isAdmin()) {
+                // Redirect admin users to admin dashboard
+                return redirect()->intended(route('admin.dashboard'));
+            } else {
+                // Redirect regular users to customer dashboard
+                return redirect()->intended(route('dashboard'));
+            }
         }
 
         return back()->withErrors([

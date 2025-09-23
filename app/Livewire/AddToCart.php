@@ -119,6 +119,7 @@ class AddToCart extends Component
     public function hideNotification()
     {
         $this->showNotification = false;
+        $this->notificationMessage = '';
     }
 
     public function render()
