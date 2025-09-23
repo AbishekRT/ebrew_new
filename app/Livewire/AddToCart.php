@@ -15,6 +15,7 @@ class AddToCart extends Component
     public $quantity = 1;
     public $showNotification = false;
     public $notificationMessage = '';
+    public $notificationType = 'success';
     public $isAdding = false;
     public $debugMessage = 'Component loaded!';
 
@@ -59,10 +60,16 @@ class AddToCart extends Component
                     ->first();
 
                 if ($existingCartItem) {
-                    \Log::info('AddToCart: Updating existing item');
-                    $existingCartItem->update([
-                        'Quantity' => $existingCartItem->Quantity + $this->quantity
+                    \Log::info('AddToCart: Updating existing item', [
+                        'cart_item_id' => $existingCartItem->getKey(),
+                        'primary_key' => $existingCartItem->getKeyName(),
+                        'current_quantity' => $existingCartItem->Quantity
                     ]);
+                    
+                    // Use direct SQL update to avoid primary key issues
+                    CartItem::where('CartID', $cart->CartID)
+                           ->where('ItemID', $this->item->ItemID)
+                           ->increment('Quantity', $this->quantity);
                 } else {
                     \Log::info('AddToCart: Creating new cart item');
                     CartItem::create([
@@ -113,6 +120,7 @@ class AddToCart extends Component
     private function showNotification($message, $type = 'success')
     {
         $this->notificationMessage = $message;
+        $this->notificationType = $type;
         $this->showNotification = true;
     }
 
@@ -120,6 +128,7 @@ class AddToCart extends Component
     {
         $this->showNotification = false;
         $this->notificationMessage = '';
+        $this->notificationType = 'success';
     }
 
     public function render()

@@ -106,8 +106,13 @@
                         </button>
                         
                         <a href="{{ route('products.index') }}" 
-                           class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-6 rounded-lg font-semibold text-center transition">
+                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold text-center transition">
                             Continue Shopping
+                        </a>
+                        
+                        <a href="{{ route('checkout.index') }}" 
+                           class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-6 rounded-lg font-semibold text-center transition">
+                            <i class="fas fa-credit-card mr-2"></i>Checkout
                         </a>
                     </div>
                 </div>

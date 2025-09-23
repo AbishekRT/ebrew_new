@@ -10,14 +10,14 @@ class CartItem extends Model
     use HasFactory;
 
     protected $table = 'cart_items';
-    // Composite primary key - no single primary key column
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $primaryKey = 'CartItemID'; // Use CartItemID as primary key
+    public $incrementing = true;
+    protected $keyType = 'int';
     public $timestamps = false;
 
     protected $fillable = [
         'CartID',
-        'ItemID',
+        'ItemID', 
         'Quantity'
     ];
 

@@ -12,6 +12,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EloquentDemoController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\EloquentDemoController;
 */
 
 // Home
-Route::get('/', fn() => view('home'))->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -88,6 +90,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Checkout
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/buy-now/{itemId}', [CheckoutController::class, 'buyNow'])->name('checkout.buy-now');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

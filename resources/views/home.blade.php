@@ -22,29 +22,21 @@
             </h2>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10">
-                @php
-                    $products = [
-                        ['id' => 1, 'img' => '1.png', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 2, 'img' => '2.png', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 3, 'img' => '3.png', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 4, 'img' => '4.png', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 5, 'img' => '5.jpg', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 6, 'img' => '6.jpg', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 7, 'img' => '7.jpg', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                        ['id' => 8, 'img' => '8.jpg', 'title' => 'HAVIT HV-G92 Gamepad', 'price' => '$120'],
-                    ];
-                @endphp
-
-                @foreach ($products as $product)
-                    <a href="{{ url('items/'.$product['id']) }}" 
+                @forelse($featuredProducts as $product)
+                    <a href="{{ url('products/'.$product->ItemID) }}" 
                        class="group bg-white rounded-lg shadow-md p-4 transition hover:shadow-xl">
-                        <img src="{{ asset('images/'.$product['img']) }}" 
-                             alt="{{ $product['title'] }}" 
+                        <img src="{{ $product->image_url }}" 
+                             alt="{{ $product->Name }}" 
                              class="h-44 mx-auto object-contain mb-4 transition-transform duration-300 group-hover:scale-105">
-                        <h3 class="text-sm font-semibold text-center text-gray-800">{{ $product['title'] }}</h3>
-                        <p class="text-red-600 font-bold text-center mt-2">{{ $product['price'] }}</p>
+                        <h3 class="text-sm font-semibold text-center text-gray-800">{{ $product->Name }}</h3>
+                        <p class="text-red-600 font-bold text-center mt-2">Rs. {{ number_format($product->Price, 2) }}</p>
                     </a>
-                @endforeach
+                @empty
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-500 text-lg">No products available at the moment.</p>
+                        <p class="text-gray-400 text-sm mt-2">Please check back later!</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>

@@ -46,7 +46,9 @@
                             <div class="text-3xl font-bold text-blue-800">{{ $userAnalytics['total_sessions'] ?? 0 }}</div>
                             <div class="text-xs text-blue-500 mt-1">Active: {{ $userStats['active_sessions'] }}</div>
                         </div>
-                        <div class="text-blue-400 text-3xl">🛡️</div>
+                        <div class="text-blue-400 text-3xl">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
@@ -56,7 +58,9 @@
                             <div class="text-3xl font-bold text-yellow-800">{{ $userAnalytics['security_incidents'] ?? 0 }}</div>
                             <div class="text-xs text-yellow-500 mt-1">{{ ucwords($userAnalytics['security_status'] ?? 'Low Risk') }}</div>
                         </div>
-                        <div class="text-yellow-400 text-3xl">⚠️</div>
+                        <div class="text-yellow-400 text-3xl">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="bg-green-50 border border-green-200 rounded-xl p-4">
@@ -66,7 +70,9 @@
                             <div class="text-3xl font-bold text-green-800">{{ count($userAnalytics['unique_devices'] ?? []) }}</div>
                             <div class="text-xs text-green-500 mt-1">Anomaly: {{ $anomalyData['anomaly_score'] ?? 0 }}%</div>
                         </div>
-                        <div class="text-green-400 text-3xl">📱</div>
+                        <div class="text-green-400 text-3xl">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
                     </div>
                 </div>
             </div>

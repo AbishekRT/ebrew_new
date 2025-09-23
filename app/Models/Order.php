@@ -13,7 +13,11 @@ class Order extends Model
     protected $primaryKey = 'OrderID';
     public $timestamps = false;
 
-    protected $fillable = ['OrderDate', 'SubTotal', 'UserID', 'OrderReference'];
+        protected $fillable = [
+        'UserID',
+        'OrderDate', 
+        'SubTotal'
+    ];
 
     /**
      * Get the attributes that should be cast.

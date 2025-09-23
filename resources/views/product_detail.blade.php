@@ -47,7 +47,7 @@
 
             <div>
                 <p class="font-bold">Roast Date</p>
-                <p>{{ $product->RoastDates ?? 'N/A' }}</p>
+                <p>{{ $product->RoastDates ? \Carbon\Carbon::parse($product->RoastDates)->format('Y-m-d') : 'N/A' }}</p>
             </div>
         </div>
 
@@ -59,5 +59,28 @@
     </div>
 
 </main>
+
+<!-- Feature Tabs Section -->
+<section class="max-w-7xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center p-6 bg-gray-50 rounded-lg">
+            <i class="fas fa-coffee text-3xl text-yellow-500 mb-3"></i>
+            <h4 class="font-semibold text-gray-800 mb-2">Fresh Quality</h4>
+            <p class="text-gray-600 text-sm">Made with the finest ingredients</p>
+        </div>
+        
+        <div class="text-center p-6 bg-gray-50 rounded-lg">
+            <i class="fas fa-shipping-fast text-3xl text-yellow-500 mb-3"></i>
+            <h4 class="font-semibold text-gray-800 mb-2">Quick Service</h4>
+            <p class="text-gray-600 text-sm">Fast and efficient preparation</p>
+        </div>
+        
+        <div class="text-center p-6 bg-gray-50 rounded-lg">
+            <i class="fas fa-heart text-3xl text-yellow-500 mb-3"></i>
+            <h4 class="font-semibold text-gray-800 mb-2">Made with Love</h4>
+            <p class="text-gray-600 text-sm">Crafted by our expert baristas</p>
+        </div>
+    </div>
+</section>
 
 @endsection
