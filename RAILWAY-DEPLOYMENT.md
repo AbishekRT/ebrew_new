@@ -12,18 +12,23 @@
 ### **Deployment Steps:**
 
 #### **1. Your Project is Connected to Railway**
+
 ✅ Repository: `AbishekRT/ebrew_new`
-✅ Branch: `main` 
+✅ Branch: `main`
 ✅ Auto-deploy enabled
 
 #### **2. Railway Configuration**
+
 Your project includes:
-- **Web Service**: Laravel application
-- **MySQL Database**: Automatically provisioned
-- **Environment Variables**: Configured for production
+
+-   **Web Service**: Laravel application
+-   **MySQL Database**: Automatically provisioned
+-   **Environment Variables**: Configured for production
 
 #### **3. Build Process**
+
 Railway will automatically:
+
 1. **Install dependencies**: `composer install --optimize-autoloader --no-dev`
 2. **Build assets**: `npm install && npm run build`
 3. **Optimize Laravel**: Cache config, routes, and views
@@ -31,11 +36,13 @@ Railway will automatically:
 5. **Start server**: Apache with PHP serving from `public/`
 
 #### **4. Environment Variables**
+
 Railway will automatically set:
-- `DATABASE_URL` - MySQL connection string
-- `APP_KEY` - Laravel application key
-- `APP_ENV=production`
-- `APP_DEBUG=false`
+
+-   `DATABASE_URL` - MySQL connection string
+-   `APP_KEY` - Laravel application key
+-   `APP_ENV=production`
+-   `APP_DEBUG=false`
 
 ### **🎯 Your eBrew Features Ready for Production:**
 
@@ -61,12 +68,13 @@ After deployment completes, your app will be available at:
 ### **🎉 What You've Accomplished:**
 
 Your eBrew Laravel application now demonstrates:
-- ✅ **Professional deployment** with Railway
-- ✅ **Production-ready configuration** 
-- ✅ **Automated CI/CD** from GitHub
-- ✅ **Managed database** with MySQL
-- ✅ **Scalable architecture** 
-- ✅ **Modern web application** with all features working
+
+-   ✅ **Professional deployment** with Railway
+-   ✅ **Production-ready configuration**
+-   ✅ **Automated CI/CD** from GitHub
+-   ✅ **Managed database** with MySQL
+-   ✅ **Scalable architecture**
+-   ✅ **Modern web application** with all features working
 
 ---
 

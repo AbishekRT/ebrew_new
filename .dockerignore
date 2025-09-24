@@ -1,0 +1,54 @@
+# Dependencies
+
+node_modules
+vendor
+composer.lock
+
+# Environment files
+
+.env
+.env.\*
+!.env.aws
+
+# Development files
+
+.git
+.gitignore
+.editorconfig
+phpunit.xml
+tests/
+storage/logs/_
+storage/framework/cache/_
+storage/framework/sessions/_
+storage/framework/views/_
+bootstrap/cache/\*
+
+# IDE files
+
+.vscode
+.idea
+_.swp
+_.swo
+\*~
+
+# OS generated files
+
+.DS*Store
+.DS_Store?
+.*\*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Documentation
+
+README.md
+AWS-DEPLOYMENT.md
+DEPLOY.md
+API_DOCUMENTATION.md
+
+# Backup files
+
+_.bak
+_.tmp
