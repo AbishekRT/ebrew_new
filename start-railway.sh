@@ -26,9 +26,15 @@ echo "🔗 Creating storage symlink..."
 php artisan storage:link --force --no-interaction || echo "ℹ️ Storage link already exists"
 
 echo "🧹 Clearing application cache..."
-php artisan config:clear --no-interaction
-php artisan cache:clear --no-interaction
-php artisan view:clear --no-interaction
+php artisan config:clear --no-interaction || true
+php artisan cache:clear --no-interaction || true
+php artisan view:clear --no-interaction || true
+php artisan route:clear --no-interaction || true
+
+echo "🔧 Debug: Checking database configuration..."
+echo "DB_HOST: $DB_HOST"
+echo "DB_DATABASE: $DB_DATABASE"
+echo "DB_CONNECTION: $DB_CONNECTION"
 
 echo "🏁 Starting web server..."
 exec php -S 0.0.0.0:$PORT -t public/
