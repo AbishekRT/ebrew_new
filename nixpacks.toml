@@ -20,5 +20,8 @@ cmds = [
   "npm run build"
 ]
 
+[phases.install]
+cmds = ["php artisan migrate --force"]
+
 [start]
 cmd = "php -S 0.0.0.0:$PORT -t public/"
