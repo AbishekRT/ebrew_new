@@ -145,10 +145,7 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(f
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-    // Basic profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    // Advanced authentication features (profile routes are defined above)
     
     // Advanced authentication features
     Route::get('/profile/login-history', [ProfileController::class, 'loginHistory'])->name('profile.login-history');
