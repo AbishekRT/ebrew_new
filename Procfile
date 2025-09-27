@@ -1,1 +1,1 @@
-# web: php -S 0.0.0.0:$PORT -t public/
+# Not needed for Docker/Apache - handled by entrypoint.sh

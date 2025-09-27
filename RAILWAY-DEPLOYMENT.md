@@ -4,9 +4,9 @@
 
 ### **What's Configured:**
 
-✅ **Procfile** - Tells Railway how to start your Laravel app
+✅ **Dockerfile** - Apache + PHP container configuration
 ✅ **nixpacks.toml** - Build and deployment configuration  
-✅ **railway.json** - Build scripts and deployment commands
+✅ **Entrypoint script** - Database migrations and Apache startup
 ✅ **Composer scripts** - Optimized for production deployment
 
 ### **Deployment Steps:**
