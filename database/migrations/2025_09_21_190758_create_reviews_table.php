@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->morphs('reviewable'); // Creates reviewable_id and reviewable_type columns with index
+            $table->morphs('reviewable'); // Creates reviewable_id and reviewable_type columns
             $table->unsignedBigInteger('user_id');
             $table->tinyInteger('rating')->unsigned()->default(5); // 1-5 stars
             $table->string('title')->nullable();
@@ -21,7 +21,8 @@ return new class extends Migration
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
             
-            // Additional indexes for performance (morphs already creates reviewable index)
+            // Indexes for performance
+            $table->index(['reviewable_type', 'reviewable_id']);
             $table->index('rating');
             $table->index('is_featured');
             
