@@ -13,19 +13,18 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->morphs('reviewable'); // Creates reviewable_id and reviewable_type columns
+            $table->morphs('reviewable'); // Creates reviewable_type, reviewable_id, and index automatically
             $table->unsignedBigInteger('user_id');
-            $table->tinyInteger('rating')->unsigned()->default(5); // 1-5 stars
+            $table->tinyInteger('rating')->unsigned()->default(5);
             $table->string('title')->nullable();
             $table->text('comment')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
-            
-            // Indexes for performance
-            $table->index(['reviewable_type', 'reviewable_id']);
+
+            // Other indexes
             $table->index('rating');
             $table->index('is_featured');
-            
+
             // Foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
