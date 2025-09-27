@@ -1,17 +1,23 @@
-[phases.setup]
-nixPkgs = ["php82Extensions.mongodb"]
+[providers]
+php = "8.2.*"
 
-[phases.install]
-cmds = ["install-php-extensions mongodb"]
+[phases.setup]
+nixPkgs = [
+  "php82",
+  "php82Extensions.mongodb", 
+  "php82Extensions.pdo_mysql",
+  "php82Extensions.mbstring",
+  "php82Extensions.xml",
+  "php82Extensions.curl",
+  "php82Extensions.openssl",
+  "nodejs_20"
+]
 
 [phases.build]
 cmds = [
   "composer install --optimize-autoloader --no-dev --no-interaction",
-  "npm ci --only=production",
-  "npm run build",
-  "php artisan config:cache",
-  "php artisan route:cache", 
-  "php artisan view:cache"
+  "npm ci --only=production", 
+  "npm run build"
 ]
 
 [start]

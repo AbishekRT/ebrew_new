@@ -1,0 +1,9 @@
+# Use Railway's PHP buildpack with MongoDB support
+[build]
+  builder = "heroku/php"
+
+[build.env]
+  PHP_EXTENSIONS = "mongodb,pdo_mysql,mbstring,xml,curl"
+
+[deploy]
+  startCommand = "php -S 0.0.0.0:$PORT -t public/"
