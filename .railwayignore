@@ -1,6 +1,8 @@
 # Development files
+.env
 .env.local
 .env.development
+.env.backup
 .DS_Store
 Thumbs.db
 
