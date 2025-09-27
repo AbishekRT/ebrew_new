@@ -10,7 +10,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $table = 'payments';
-    protected $primaryKey = 'PaymentID';
+    protected $primaryKey = 'id'; // Standard Laravel primary key
     public $timestamps = false;
 
     protected $fillable = ['PaymentDate', 'PaymentStatus', 'PaymentAmount', 'OrderID'];
@@ -18,7 +18,7 @@ class Payment extends Model
     // Relationships
     public function order()
     {
-        return $this->belongsTo(Order::class, 'OrderID', 'OrderID');
+        return $this->belongsTo(Order::class, 'OrderID', 'id');
     }
 
     // Optional helper: check if payment is complete

@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cart_items', function (Blueprint $table) {
-            $table->id('CartItemID');
+            $table->id(); // Standard Laravel id column
             $table->unsignedBigInteger('CartID');
             $table->unsignedBigInteger('ItemID');
             $table->integer('Quantity')->default(1);
             
             // Foreign key constraints
-            $table->foreign('CartID')->references('CartID')->on('carts')->onDelete('cascade');
+            $table->foreign('CartID')->references('id')->on('carts')->onDelete('cascade');
             $table->foreign('ItemID')->references('id')->on('items')->onDelete('cascade');
             
             // Unique constraint to prevent duplicate items in same cart

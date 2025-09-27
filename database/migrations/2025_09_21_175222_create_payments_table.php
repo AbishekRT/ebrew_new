@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->id('PaymentID');
+            $table->id(); // Standard Laravel id column
             $table->unsignedBigInteger('OrderID');
             $table->decimal('Amount', 10, 2);
             $table->string('PaymentMethod', 50);
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('TransactionID')->nullable();
             
             // Foreign key constraint
-            $table->foreign('OrderID')->references('OrderID')->on('orders')->onDelete('cascade');
+            $table->foreign('OrderID')->references('id')->on('orders')->onDelete('cascade');
             
             // Indexes for performance
             $table->index('OrderID');

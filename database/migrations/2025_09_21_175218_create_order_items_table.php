@@ -21,7 +21,7 @@ return new class extends Migration
             $table->primary(['OrderID', 'ItemID']);
             
             // Foreign key constraints
-            $table->foreign('OrderID')->references('OrderID')->on('orders')->onDelete('cascade');
+            $table->foreign('OrderID')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('ItemID')->references('id')->on('items')->onDelete('cascade');
             
             // Indexes for performance

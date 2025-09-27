@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id('OrderID');
+            $table->id(); // Standard Laravel id column
             $table->unsignedBigInteger('UserID');
             $table->timestamp('OrderDate');
             $table->decimal('SubTotal', 10, 2);

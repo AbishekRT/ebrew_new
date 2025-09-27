@@ -10,7 +10,7 @@ class CartItem extends Model
     use HasFactory;
 
     protected $table = 'cart_items';
-    protected $primaryKey = 'CartItemID'; // Use CartItemID as primary key
+    protected $primaryKey = 'id'; // Standard Laravel primary key
     public $incrementing = true;
     protected $keyType = 'int';
     public $timestamps = false;
@@ -23,7 +23,7 @@ class CartItem extends Model
 
     public function cart()
     {
-        return $this->belongsTo(Cart::class, 'CartID', 'CartID');
+        return $this->belongsTo(Cart::class, 'CartID', 'id');
     }
 
     public function item()

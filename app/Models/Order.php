@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'orders';
-    protected $primaryKey = 'OrderID';
+    protected $primaryKey = 'id'; // Standard Laravel primary key
     public $timestamps = false;
 
         protected $fillable = [
@@ -129,12 +129,12 @@ class Order extends Model
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class, 'OrderID', 'OrderID')->with('item');
+        return $this->hasMany(OrderItem::class, 'OrderID', 'id')->with('item');
     }
 
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'OrderID', 'OrderID');
+        return $this->hasMany(Payment::class, 'OrderID', 'id');
     }
 
     /**
@@ -159,7 +159,7 @@ class Order extends Model
      */
     public function latestPayment()
     {
-        return $this->hasOne(Payment::class, 'OrderID', 'OrderID')
+        return $this->hasOne(Payment::class, 'OrderID', 'id')
                     ->latestOfMany('PaymentDate');
     }
 
@@ -168,7 +168,7 @@ class Order extends Model
      */
     public function successfulPayments()
     {
-        return $this->hasMany(Payment::class, 'OrderID', 'OrderID')
+        return $this->hasMany(Payment::class, 'OrderID', 'id')
                     ->where('PaymentStatus', 'paid');
     }
 }

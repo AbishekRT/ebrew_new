@@ -10,7 +10,7 @@ class Cart extends Model
     use HasFactory;
 
     protected $table = 'carts';
-    protected $primaryKey = 'CartID';
+    protected $primaryKey = 'id'; // Standard Laravel primary key
     public $timestamps = false;
 
     protected $fillable = [
@@ -56,7 +56,7 @@ class Cart extends Model
 
     public function items()
     {
-        return $this->hasMany(CartItem::class, 'CartID', 'CartID');
+        return $this->hasMany(CartItem::class, 'CartID', 'id');
     }
 
     public function user()

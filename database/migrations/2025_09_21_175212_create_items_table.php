@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id('ItemID');
+            $table->id(); // Standard Laravel id column
             $table->string('Name');
             $table->text('Description');
             $table->decimal('Price', 10, 2);
