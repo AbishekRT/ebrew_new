@@ -39,10 +39,12 @@ RUN composer install --optimize-autoloader
 # Install Node dependencies and build production assets
 RUN npm ci --silent
 ENV NODE_ENV=production
-RUN npm run build
 
-# Verify build output exists
-RUN ls -la /var/www/html/public/build/ || echo "Build directory not found"
+# Build assets with verbose output
+RUN npm run build -- --mode production
+
+# Verify build output exists and show contents
+RUN ls -la /var/www/html/public/build/ && cat /var/www/html/public/build/manifest.json
 
 # Set permissions for Laravel and Vite assets
 RUN chown -R www-data:www-data /var/www/html \
