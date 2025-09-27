@@ -5,10 +5,10 @@ FROM composer:2 AS vendor
 
 WORKDIR /app
 
-# Copy composer files
-COPY composer.json composer.lock ./
+# Copy only composer.json if lock file not available
+COPY composer.json ./
 
-# Install PHP dependencies (without dev for production)
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts --prefer-dist
 
 
@@ -25,7 +25,6 @@ RUN npm install
 
 COPY . .
 
-# Build frontend (if using Vite or Mix)
 RUN npm run build
 
 
@@ -46,20 +45,20 @@ RUN apt-get update && apt-get install -y \
 # Install Nginx
 RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
 
-# Configure PHP
+# Copy vendor + public from build stages
 COPY --from=vendor /app/vendor /var/www/html/vendor
 COPY --from=frontend /app/public /var/www/html/public
 
-# Copy app source
+# Copy source code
 COPY . /var/www/html
 
 WORKDIR /var/www/html
 
-# Set permissions
+# Permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Nginx default config (no custom file needed)
+# Nginx default config (inline, no extra file)
 RUN echo 'server { \
     listen 80; \
     index index.php index.html; \
@@ -78,5 +77,4 @@ RUN echo 'server { \
 
 EXPOSE 80
 
-# Start services (php-fpm + nginx)
 CMD service php8.2-fpm start && nginx -g "daemon off;"
