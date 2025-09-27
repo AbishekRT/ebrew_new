@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
 
-            // Other indexes
+            // Additional indexes (morphs already creates reviewable index)
             $table->index('rating');
             $table->index('is_featured');
 

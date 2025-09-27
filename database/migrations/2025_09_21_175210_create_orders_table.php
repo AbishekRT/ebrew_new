@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
-            $table->id('CartID');
-            $table->unsignedBigInteger('UserID')->nullable();
-            $table->string('session_id')->nullable();
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id('OrderID');
+            $table->unsignedBigInteger('UserID');
+            $table->timestamp('OrderDate');
+            $table->decimal('SubTotal', 10, 2);
             
             // Foreign key constraint
             $table->foreign('UserID')->references('id')->on('users')->onDelete('cascade');
             
             // Indexes for performance
-            $table->index(['UserID', 'session_id']);
+            $table->index('OrderDate');
+            $table->index('UserID');
         });
     }
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('orders');
     }
 };

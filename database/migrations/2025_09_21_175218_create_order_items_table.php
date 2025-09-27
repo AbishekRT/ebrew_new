@@ -11,21 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->id('CartItemID');
-            $table->unsignedBigInteger('CartID');
-            $table->unsignedBigInteger('ItemID');
-            $table->integer('Quantity')->default(1);
+        Schema::create('order_items', function (Blueprint $table) {
+            $table->unsignedBigInteger('OrderID');
+            $table->unsignedBigInteger('ItemID'); 
+            $table->integer('Quantity');
+            // Note: Price column will be added by later migration
+            
+            // Composite primary key
+            $table->primary(['OrderID', 'ItemID']);
             
             // Foreign key constraints
-            $table->foreign('CartID')->references('CartID')->on('carts')->onDelete('cascade');
+            $table->foreign('OrderID')->references('OrderID')->on('orders')->onDelete('cascade');
             $table->foreign('ItemID')->references('ItemID')->on('items')->onDelete('cascade');
             
-            // Unique constraint to prevent duplicate items in same cart
-            $table->unique(['CartID', 'ItemID']);
-            
             // Indexes for performance
-            $table->index('CartID');
+            $table->index('OrderID');
             $table->index('ItemID');
         });
     }
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cart_items');
+        Schema::dropIfExists('order_items');
     }
 };

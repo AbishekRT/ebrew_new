@@ -12,14 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->decimal('price', 10, 2);
-            $table->string('image')->nullable();
-            $table->string('category')->default('beverage');
-            $table->boolean('is_available')->default(true);
-            $table->timestamps();
+            $table->id('ItemID');
+            $table->string('Name');
+            $table->text('Description');
+            $table->decimal('Price', 10, 2);
+            $table->string('Image')->nullable();
+            $table->text('TastingNotes')->nullable();
+            $table->text('ShippingAndReturns')->nullable();
+            $table->date('RoastDates')->nullable();
+            
+            // Indexes for performance
+            $table->index('Name');
+            $table->index('Price');
         });
     }
 
