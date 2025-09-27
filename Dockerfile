@@ -5,9 +5,9 @@
 ###################
 FROM node:20 AS node_builder
 WORKDIR /build
-COPY package*.json ./
+COPY ../package*.json ./        # Adjust path because Dockerfile is in docker/
 RUN npm ci --silent
-COPY . .
+COPY ../ .                     # Copy entire project from root
 RUN npm run build --if-present
 
 ###################
@@ -15,9 +15,9 @@ RUN npm run build --if-present
 ###################
 FROM composer:2 AS vendor
 WORKDIR /app
-COPY composer.json composer.lock ./
+COPY ../composer.json ../composer.lock ./   # Adjust path
 RUN composer install --no-dev --optimize-autoloader --prefer-dist
-COPY . .
+COPY ../ .                                  # Copy entire project from root
 RUN composer dump-autoload --optimize
 
 ###################
@@ -47,8 +47,8 @@ COPY --from=node_builder /build/public /var/www/html/public
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
  && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Copy entrypoint script
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+# Copy entrypoint script (Dockerfile is in docker/)
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose Railway port
