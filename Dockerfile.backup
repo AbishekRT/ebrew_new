@@ -29,7 +29,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 WORKDIR /app
 
 # Copy composer files
-COPY composer.json composer.lock ./
+COPY composer.json ./
+COPY composer.lock* ./
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev --no-interaction
