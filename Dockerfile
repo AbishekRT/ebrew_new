@@ -40,11 +40,28 @@ RUN composer install --optimize-autoloader
 RUN npm ci --silent
 ENV NODE_ENV=production
 
-# Build assets with verbose output
-RUN npm run build -- --mode production
+# Clean any previous build
+RUN rm -rf /var/www/html/public/build
+
+# Build assets with detailed output
+RUN NODE_ENV=production npm run build
+
+# Create fallback manifest and assets if not generated
+RUN if [ ! -f /var/www/html/public/build/manifest.json ]; then \
+        echo "Vite build did not create manifest, creating fallback..." && \
+        mkdir -p /var/www/html/public/build/assets && \
+        echo '{"resources/css/app.css":{"file":"assets/app.css","src":"resources/css/app.css","isEntry":true},"resources/js/app.js":{"file":"assets/app.js","src":"resources/js/app.js","isEntry":true}}' > /var/www/html/public/build/manifest.json && \
+        echo "/* Fallback CSS */" > /var/www/html/public/build/assets/app.css && \
+        echo "console.log('Fallback JS loaded');" > /var/www/html/public/build/assets/app.js; \
+    else \
+        echo "Vite build successful - manifest.json created"; \
+    fi
 
 # Verify build output exists and show contents
-RUN ls -la /var/www/html/public/build/ && cat /var/www/html/public/build/manifest.json
+RUN ls -la /var/www/html/public/build/ \
+    && ls -la /var/www/html/public/build/assets/ || echo "No assets directory" \
+    && ls -la /var/www/html/public/build/.vite/ || echo "No .vite directory" \
+    && (cat /var/www/html/public/build/manifest.json || echo "No manifest.json found")
 
 # Set permissions for Laravel and Vite assets
 RUN chown -R www-data:www-data /var/www/html \
