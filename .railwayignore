@@ -12,18 +12,6 @@ Thumbs.db
 *.swp
 *.swo
 
-# Documentation
-*.md
-docs/
-
-# AWS files (not needed for Railway)
-aws/
-*.pem
-
-# Large log files
-storage/logs/*.log
-*.log
-
 # Cache directories that will be rebuilt
 bootstrap/cache/*
 storage/framework/cache/*
