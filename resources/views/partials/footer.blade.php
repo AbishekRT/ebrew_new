@@ -18,9 +18,15 @@
   </div>
   <div class="mt-8 text-center text-gray-300 text-sm">
     &copy; {{ date('Y') }} eBrew Inc. All Rights Reserved
+    <div class="mt-2">
+      <a href="{{ route('login') }}" 
+         class="text-xs text-gray-400 hover:text-gray-200 underline transition">
+        Admin Login
+      </a>
+    </div>
     @auth
       @if(auth()->user()->Role === 'admin')
-        <div class="mt-2">
+        <div class="mt-1">
           <a href="{{ route('admin.dashboard') }}" 
              class="text-xs text-gray-400 hover:text-gray-200 underline transition">
             Admin Panel

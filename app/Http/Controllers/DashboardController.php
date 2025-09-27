@@ -56,7 +56,7 @@ class DashboardController extends Controller
         $userStats = [
             'total_orders' => $user->orders()->count(),
             'total_spent' => $user->totalSpent(),
-            'account_age_days' => $user->created_at->diffInDays(now()),
+            'account_age_hours' => round($user->created_at->diffInHours(now()), 1),
             'last_login' => $user->last_login_at,
             'security_score' => $userAnalytics['risk_score'] ?? 0,
             'active_sessions' => $user->getActiveSessionCount(),
