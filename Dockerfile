@@ -1,51 +1,59 @@
-# ------------------------
-# Stage 1: Node build (assets)
-# ------------------------
-FROM node:20 AS frontend
+# syntax=docker/dockerfile:1
 
-WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm install
+###################
+# Stage 1: Node builder (optional for frontend)
+###################
+FROM node:20 AS node_builder
+WORKDIR /build
+COPY package*.json ./
+RUN npm ci --silent
 COPY . .
-RUN npm run build
+RUN npm run build --if-present
 
+###################
+# Stage 2: Composer (install PHP deps)
+###################
+FROM composer:2 AS vendor
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --prefer-dist
+COPY . .
+RUN composer dump-autoload --optimize
 
-# ------------------------
-# Stage 2: PHP build
-# ------------------------
-FROM php:8.2-fpm
+###################
+# Stage 3: Production image (PHP built-in server)
+###################
+FROM php:8.3-fpm-bullseye
 
-# Install system packages + PHP extensions
+# Install OS packages and PHP extensions
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip unzip git curl \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
-    && rm -rf /var/lib/apt/lists/*
+    zip unzip git curl libpng-dev libonig-dev libxml2-dev libjpeg-dev libfreetype6-dev \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install pdo_mysql mbstring bcmath gd xml zip opcache \
+ && pecl install mongodb \
+ && docker-php-ext-enable mongodb \
+ && rm -rf /var/lib/apt/lists/*
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy project files
-COPY . .
+# Copy composer + app
+COPY --from=vendor /app /var/www/html
 
-# Install PHP deps AFTER extensions are installed
-RUN composer install --no-dev --optimize-autoloader --no-scripts --prefer-dist
+# Copy built frontend assets
+COPY --from=node_builder /build/public /var/www/html/public
 
-# Copy frontend build output
-COPY --from=frontend /app/public /var/www/html/public
+# Storage & cache permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+ && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expose port for Railway
+# Expose Railway port
 EXPOSE 8080
 ENV PORT=8080
 
-CMD ["php-fpm"]
+# Run entrypoint
+CMD ["/usr/local/bin/entrypoint.sh"]
