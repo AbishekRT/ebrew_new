@@ -1,0 +1,29 @@
+# Development files
+.env.local
+.env.development
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+*.md
+docs/
+
+# AWS files (not needed for Railway)
+aws/
+*.pem
+
+# Large log files
+storage/logs/*.log
+*.log
+
+# Cache directories that will be rebuilt
+bootstrap/cache/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*

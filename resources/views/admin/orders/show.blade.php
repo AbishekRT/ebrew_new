@@ -51,7 +51,11 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         @if($item->item && $item->item->Image)
-                                            <img src="{{ asset($item->item->Image) }}" alt="{{ $item->item->Name ?? 'Product' }}" class="w-12 h-12 rounded-lg object-cover mr-4">
+                                            <img src="{{ $item->item->image_url }}" alt="{{ $item->item->Name ?? 'Product' }}" class="w-12 h-12 rounded-lg object-cover mr-4">
+                                        @elseif($item->item)
+                                            <div class="w-12 h-12 bg-gray-200 rounded-lg mr-4 flex items-center justify-center">
+                                                <span class="text-gray-400 text-xs">No Image</span>
+                                            </div>
                                         @endif
                                         <div>
                                             <div class="font-medium text-gray-900">{{ $item->item->Name ?? 'Unknown Product' }}</div>
@@ -59,13 +63,13 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-                                    Rs {{ number_format($item->Price ?? 0, 2) }}
+                                    Rs {{ number_format($item->Price ?? $item->item->Price ?? 0, 2) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-700">
                                     {{ $item->Quantity ?? 0 }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap font-medium text-[#7C4D2B]">
-                                    Rs {{ number_format(($item->Price ?? 0) * ($item->Quantity ?? 0), 2) }}
+                                    Rs {{ number_format(($item->Price ?? $item->item->Price ?? 0) * ($item->Quantity ?? 0), 2) }}
                                 </td>
                             </tr>
                         @endforeach

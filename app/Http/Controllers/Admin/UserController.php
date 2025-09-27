@@ -35,6 +35,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'Role' => 'required|in:customer,admin',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
         ]);
 
         User::create([
@@ -42,6 +44,8 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'Role' => $request->Role,
+            'Phone' => $request->phone,
+            'DeliveryAddress' => $request->address,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
@@ -68,17 +72,35 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $validationRules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'Role' => 'required|in:customer,admin',
-        ]);
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+        ];
 
-        $user->update([
+        // Only validate password if provided
+        if ($request->filled('password')) {
+            $validationRules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $request->validate($validationRules);
+
+        $updateData = [
             'name' => $request->name,
             'email' => $request->email,
             'Role' => $request->Role,
-        ]);
+            'Phone' => $request->phone,
+            'DeliveryAddress' => $request->address,
+        ];
+
+        // Only update password if provided
+        if ($request->filled('password')) {
+            $updateData['password'] = bcrypt($request->password);
+        }
+
+        $user->update($updateData);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }

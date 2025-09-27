@@ -20,7 +20,7 @@
             </div>
             <div class="bg-purple-50 border border-purple-200 p-3 rounded-lg">
                 <div class="font-semibold text-purple-700">Account Age</div>
-                <div class="text-2xl font-bold text-purple-800">{{ $userStats['account_age_hours'] }}h</div>
+                <div class="text-2xl font-bold text-purple-800">{{ $userStats['account_age_hours'] }} hours</div>
             </div>
             <div class="bg-orange-50 border border-orange-200 p-3 rounded-lg">
                 <div class="font-semibold text-orange-700">Active Sessions</div>

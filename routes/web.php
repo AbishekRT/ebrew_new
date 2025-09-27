@@ -119,6 +119,9 @@ Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(f
     // Order Management
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->except(['create', 'store', 'edit', 'update', 'destroy']);
     
+    // Product Management
+    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class)->only(['index', 'store', 'edit', 'update', 'destroy']);
+    
     // Security Dashboard
     Route::get('/security', [\App\Http\Controllers\Admin\SecurityDashboardController::class, 'index'])->name('security.dashboard');
     Route::get('/security/users/{user}', [\App\Http\Controllers\Admin\SecurityDashboardController::class, 'userHistory'])->name('security.user-history');

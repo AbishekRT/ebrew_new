@@ -1,22 +1,29 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Notification -->
-    <div x-data="{ show: @entangle('showNotification') }" 
-         x-show="show" 
+    @if($showNotification)
+    <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative" 
+         x-data="{ show: true }" 
+         x-show="show"
          x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform translate-y-2"
+         x-transition:enter-start="opacity-0 transform -translate-y-2"
          x-transition:enter-end="opacity-100 transform translate-y-0"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 transform translate-y-0"
-         x-transition:leave-end="opacity-0 transform translate-y-2"
-         class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg"
-         x-init="$watch('show', value => { if(value) setTimeout(() => @this.hideNotification(), 3000) })">
-        <div class="flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span>{{ $notificationMessage }}</span>
+         x-init="setTimeout(() => { show = false; @this.hideNotification() }, 3000)">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>{{ $notificationMessage }}</span>
+            </div>
+            <button @click="show = false; @this.hideNotification()" class="text-green-700 hover:text-green-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
     </div>
+    @endif
+
 
     <div class="bg-white rounded-xl shadow-lg p-6">
         <div class="flex justify-between items-center mb-6">

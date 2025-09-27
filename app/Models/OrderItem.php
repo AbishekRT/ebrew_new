@@ -14,7 +14,7 @@ class OrderItem extends Model
     protected $primaryKey = null; // composite key
     public $incrementing = false;
 
-    protected $fillable = ['OrderID', 'ItemID', 'Quantity'];
+    protected $fillable = ['OrderID', 'ItemID', 'Quantity', 'Price'];
 
     // Relationships
     public function order()

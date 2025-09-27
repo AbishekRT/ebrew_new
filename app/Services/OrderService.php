@@ -43,7 +43,8 @@ class OrderService
                 return [
                     'OrderID' => $order->OrderID,
                     'ItemID' => $cartItem->ItemID,
-                    'Quantity' => $cartItem->Quantity
+                    'Quantity' => $cartItem->Quantity,
+                    'Price' => $cartItem->item->Price // Store price at time of purchase
                 ];
             })->toArray();
 

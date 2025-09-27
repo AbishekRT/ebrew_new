@@ -52,7 +52,7 @@
                 [
                     'title' => 'Manage Products',
                     'desc' => 'Add, edit, or delete coffee products.',
-                    'link' => route('products.index')
+                    'link' => route('admin.products.index')
                 ],
                 [
                     'title' => 'Manage Users',

@@ -115,10 +115,14 @@ return [
 
 'mongodb' => [
     'driver'   => 'mongodb',
-    'dsn'      => env('MONGO_DB_URI'),        // Use the Atlas connection string
-    'database' => env('MONGO_DB_DATABASE'),   // Database name in Atlas
+    'dsn'      => env('MONGO_DB_URI'),        // Railway/Atlas connection string
+    'host'     => env('MONGO_DB_HOST', 'localhost'),
+    'port'     => env('MONGO_DB_PORT', 27017),
+    'database' => env('MONGO_DB_DATABASE'),   
+    'username' => env('MONGO_DB_USERNAME'),
+    'password' => env('MONGO_DB_PASSWORD'),
     'options'  => [
-        'database' => env('MONGO_DB_AUTH_DATABASE', 'admin'), // Auth DB
+        'database' => env('MONGO_DB_AUTH_DATABASE', 'admin'),
     ],
 ],
 

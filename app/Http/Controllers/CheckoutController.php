@@ -69,7 +69,8 @@ class CheckoutController extends Controller
             \DB::table('order_items')->insert([
                 'OrderID' => $orderId,
                 'ItemID' => $cartItem->ItemID,
-                'Quantity' => $cartItem->Quantity
+                'Quantity' => $cartItem->Quantity,
+                'Price' => $cartItem->item->Price // Store price at time of purchase
             ]);
         }
 
