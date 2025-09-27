@@ -1,0 +1,2 @@
+# Force Railway to use Dockerfile instead of auto-detecting PHP
+providers = []
