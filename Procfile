@@ -1,1 +1,1 @@
-web: bash start-railway.sh
+web: php -S 0.0.0.0:$PORT -t public/

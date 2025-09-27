@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Order;
 use App\Observers\OrderObserver;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register model observers
         Order::observe(OrderObserver::class);
+        // // // if (app()->environment('production')) {
+        // //     URL::forceScheme('https');
+        // }
     }
 }
