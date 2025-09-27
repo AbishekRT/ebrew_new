@@ -1,59 +1,54 @@
-# syntax=docker/dockerfile:1
+# Use official PHP with Apache
+FROM php:8.2-apache
 
-###################
-# Stage 1: Node builder (optional for frontend)
-###################
-FROM node:20 AS node_builder
-WORKDIR /build
-COPY ../package*.json ./        # Adjust path because Dockerfile is in docker/
-RUN npm ci --silent
-COPY ../ .                     # Copy entire project from root
-RUN npm run build --if-present
-
-###################
-# Stage 2: Composer (install PHP deps)
-###################
-FROM composer:2 AS vendor
-WORKDIR /app
-COPY ../composer.json ../composer.lock ./   # Adjust path
-RUN composer install --no-dev --optimize-autoloader --prefer-dist
-COPY ../ .                                  # Copy entire project from root
-RUN composer dump-autoload --optimize
-
-###################
-# Stage 3: Production image (PHP built-in server)
-###################
-FROM php:8.3-fpm-bullseye
-
-# Install OS packages and PHP extensions
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    zip unzip git curl libpng-dev libonig-dev libxml2-dev libjpeg-dev libfreetype6-dev \
- && docker-php-ext-configure gd --with-freetype --with-jpeg \
- && docker-php-ext-install pdo_mysql mbstring bcmath gd xml zip opcache \
- && pecl install mongodb \
- && docker-php-ext-enable mongodb \
- && rm -rf /var/lib/apt/lists/*
+    git curl unzip zip \
+    libpng-dev libonig-dev libxml2-dev libzip-dev libssl-dev pkg-config \
+    libcurl4-openssl-dev supervisor \
+    nodejs npm \
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install MongoDB PHP extension
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Suppress Apache ServerName warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer + app
-COPY --from=vendor /app /var/www/html
+# Copy project files
+COPY . .
 
-# Copy built frontend assets
-COPY --from=node_builder /build/public /var/www/html/public
+# Install PHP dependencies
+RUN composer install --optimize-autoloader
 
-# Storage & cache permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
- && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+# Install Node dependencies and build production assets
+RUN npm install && npm run build
 
-# Copy entrypoint script (Dockerfile is in docker/)
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+# Set permissions for Laravel and Vite assets
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build
+
+# Make Apache serve the public folder
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+
+# Copy entrypoint script
+COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Expose Railway port
-EXPOSE 8080
-ENV PORT=8080
+# Expose Apache port
+EXPOSE 80
 
-# Run entrypoint
-CMD ["/usr/local/bin/entrypoint.sh"]
+# Start Apache via entrypoint
+ENTRYPOINT ["entrypoint.sh"]

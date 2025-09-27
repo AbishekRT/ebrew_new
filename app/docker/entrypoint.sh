@@ -1,22 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-# Set default port if not provided
-: "${PORT:=8080}"
+# Wait for DB to be ready and run migrations safely
+until php artisan migrate:fresh --seed --force; do
+    echo "Migration failed, retrying in 5 seconds..."
+    sleep 5
+done
 
-cd /var/www/html
-
-# Ensure composer autoload is optimized
-composer dump-autoload --optimize --no-interaction || true
-
-# Ensure storage symlink exists
-php artisan storage:link || true
-
-# Run migrations if requested
-if [ "${MIGRATE_ON_DEPLOY:-false}" = "true" ]; then
-  echo "Running migrations..."
-  php artisan migrate --force || { echo 'Migration failed'; exit 1; }
+# Seed database only if environment is not production
+if [ "$APP_ENV" != "production" ]; then
+    php artisan db:seed --force || echo "Seeding failed or already done, skipping..."
 fi
 
-# Start Laravel using PHP built-in server
-php -S 0.0.0.0:${PORT} -t public
+# Start Apache in the foreground
+apache2-foreground
