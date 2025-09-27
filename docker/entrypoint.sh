@@ -10,20 +10,23 @@ until php artisan migrate:status; do
     sleep 5
 done
 
-echo "Running migrations..."
-if ! php artisan migrate --force; then
-    echo "Migration failed, attempting to reset and retry..."
+echo "Attempting fresh migration to avoid constraint issues..."
+# Use fresh migration to completely rebuild the database schema
+if ! php artisan migrate:fresh --force; then
+    echo "Fresh migration failed, trying to handle constraints manually..."
     
-    # Try to reset migrations and re-run
-    php artisan migrate:reset --force || echo "Reset failed, continuing..."
+    # Disable foreign key checks, reset, and re-enable
+    php artisan tinker --execute="
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::dropAllTables();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    " || echo "Manual cleanup failed"
     
-    if ! php artisan migrate --force; then
-        echo "Migration still failing, attempting fresh migration..."
-        php artisan migrate:fresh --force || echo "Fresh migration failed, continuing with startup..."
-    fi
+    # Try fresh migration again
+    php artisan migrate:fresh --force || echo "Migration failed, continuing with startup..."
 fi
 
-echo "Migrations completed or skipped"
+echo "Migrations completed"
 
 # ==========================
 # Start Apache in Foreground

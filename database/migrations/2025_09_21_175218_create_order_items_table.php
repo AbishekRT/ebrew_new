@@ -22,7 +22,7 @@ return new class extends Migration
             
             // Foreign key constraints
             $table->foreign('OrderID')->references('OrderID')->on('orders')->onDelete('cascade');
-            $table->foreign('ItemID')->references('ItemID')->on('items')->onDelete('cascade');
+            $table->foreign('ItemID')->references('id')->on('items')->onDelete('cascade');
             
             // Indexes for performance
             $table->index('OrderID');

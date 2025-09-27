@@ -11,7 +11,7 @@ class Item extends Model
     use HasFactory;
 
     protected $table = 'items';
-    protected $primaryKey = 'ItemID';
+    protected $primaryKey = 'id'; // Use standard Laravel primary key
     public $timestamps = false;
 
     protected $fillable = [
@@ -195,12 +195,12 @@ class Item extends Model
     
     public function cartItems()
     {
-        return $this->hasMany(CartItem::class, 'ItemID', 'ItemID');
+        return $this->hasMany(CartItem::class, 'ItemID', 'id');
     }
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class, 'ItemID', 'ItemID');
+        return $this->hasMany(OrderItem::class, 'ItemID', 'id');
     }
 
     /**
@@ -235,8 +235,7 @@ class Item extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_items', 'ItemID', 'OrderID')
-                    ->withPivot('Quantity')
-                    ->withTimestamps();
+                    ->withPivot('Quantity');
     }
 
     /**

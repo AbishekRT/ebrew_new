@@ -19,7 +19,7 @@ return new class extends Migration
             
             // Foreign key constraints
             $table->foreign('CartID')->references('CartID')->on('carts')->onDelete('cascade');
-            $table->foreign('ItemID')->references('ItemID')->on('items')->onDelete('cascade');
+            $table->foreign('ItemID')->references('id')->on('items')->onDelete('cascade');
             
             // Unique constraint to prevent duplicate items in same cart
             $table->unique(['CartID', 'ItemID']);
