@@ -1,4 +1,5 @@
 # Development files
+
 .env
 .env.local
 .env.development
@@ -7,13 +8,15 @@
 Thumbs.db
 
 # IDE files
+
 .vscode/
 .idea/
-*.swp
-*.swo
+_.swp
+_.swo
 
 # Cache directories that will be rebuilt
-bootstrap/cache/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
+
+bootstrap/cache/_
+storage/framework/cache/_
+storage/framework/sessions/_
+storage/framework/views/_

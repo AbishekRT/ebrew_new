@@ -26,6 +26,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
+# Copy entrypoint script BEFORE copying project files
+COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Copy project files
 COPY . .
 
@@ -42,10 +46,6 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Make Apache serve the public folder
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-
-# Copy entrypoint script
-COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose Apache port
 EXPOSE 80
