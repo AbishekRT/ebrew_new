@@ -18,7 +18,7 @@ return new class extends Migration
         // Update existing order_items with current item prices
         \DB::statement('
             UPDATE order_items oi
-            INNER JOIN items i ON oi.ItemID = i.ItemID 
+            INNER JOIN items i ON oi.ItemID = i.id 
             SET oi.Price = i.Price 
             WHERE oi.Price IS NULL
         ');
