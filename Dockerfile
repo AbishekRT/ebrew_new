@@ -1,80 +1,51 @@
 # ------------------------
-# Stage 1: PHP dependencies
-# ------------------------
-FROM composer:2 AS vendor
-
-WORKDIR /app
-
-# Copy only composer.json if lock file not available
-COPY composer.json ./
-
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts --prefer-dist
-
-
-# ------------------------
-# Stage 2: Node build (if using Vite / Mix)
+# Stage 1: Node build (assets)
 # ------------------------
 FROM node:20 AS frontend
 
 WORKDIR /app
-
 COPY package.json package-lock.json* ./
-
 RUN npm install
-
 COPY . .
-
 RUN npm run build
 
 
 # ------------------------
-# Stage 3: Final Image
+# Stage 2: PHP build
 # ------------------------
 FROM php:8.2-fpm
 
-# Install required extensions
+# Install system packages + PHP extensions
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
     zip unzip git curl \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Nginx
-RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
-
-# Copy vendor + public from build stages
-COPY --from=vendor /app/vendor /var/www/html/vendor
-COPY --from=frontend /app/public /var/www/html/public
-
-# Copy source code
-COPY . /var/www/html
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+# Copy project files
+COPY . .
+
+# Install PHP deps AFTER extensions are installed
+RUN composer install --no-dev --optimize-autoloader --no-scripts --prefer-dist
+
+# Copy frontend build output
+COPY --from=frontend /app/public /var/www/html/public
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Nginx default config (inline, no extra file)
-RUN echo 'server { \
-    listen 80; \
-    index index.php index.html; \
-    server_name _; \
-    root /var/www/html/public; \
-    location / { try_files $uri $uri/ /index.php?$query_string; } \
-    location ~ \.php$$ { \
-        include snippets/fastcgi-php.conf; \
-        fastcgi_pass 127.0.0.1:9000; \
-        fastcgi_index index.php; \
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
-        include fastcgi_params; \
-    } \
-    location ~ /\.ht { deny all; } \
-}' > /etc/nginx/sites-available/default
+# Expose port for Railway
+EXPOSE 8080
+ENV PORT=8080
 
-EXPOSE 80
-
-CMD service php8.2-fpm start && nginx -g "daemon off;"
+CMD ["php-fpm"]
