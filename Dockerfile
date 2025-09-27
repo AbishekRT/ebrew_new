@@ -37,12 +37,22 @@ COPY . .
 RUN composer install --optimize-autoloader
 
 # Install Node dependencies and build production assets
-RUN npm install && npm run build
+RUN npm ci --silent
+ENV NODE_ENV=production
+RUN npm run build
+
+# Verify build output exists
+RUN ls -la /var/www/html/public/build/ || echo "Build directory not found"
 
 # Set permissions for Laravel and Vite assets
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Ensure public/build directory exists and has correct permissions
+RUN mkdir -p /var/www/html/public/build \
+    && chown -R www-data:www-data /var/www/html/public \
+    && chmod -R 755 /var/www/html/public
 
 # Make Apache serve the public folder
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
