@@ -28,6 +28,7 @@ SANCTUM_STATEFUL_DOMAINS=web-production-68199a.up.railway.app
 ```
 
 ### Steps:
+
 1. Go to your Railway project dashboard
 2. Click on your service
 3. Go to "Variables" tab
@@ -35,6 +36,7 @@ SANCTUM_STATEFUL_DOMAINS=web-production-68199a.up.railway.app
 5. Deploy your app
 
 ### Important Notes:
-- Replace `web-production-68199a.up.railway.app` with your actual Railway domain
-- Make sure APP_URL and ASSET_URL both use `https://`
-- Update database credentials to match your Railway MySQL service
+
+-   Replace `web-production-68199a.up.railway.app` with your actual Railway domain
+-   Make sure APP_URL and ASSET_URL both use `https://`
+-   Update database credentials to match your Railway MySQL service
