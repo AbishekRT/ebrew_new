@@ -9,10 +9,8 @@ mkdir -p /var/www/html/bootstrap/cache
 # Set proper permissions
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Run migrations + seed (ignore errors if DB isn’t ready yet)
-echo "Running migrations and seed..."
-php artisan migrate --force || true
-php artisan db:seed --force || true
+# Run migrations and seed
+php artisan migrate --force && php artisan db:seed --force
 
 # Start Apache in foreground
 exec apache2-foreground
