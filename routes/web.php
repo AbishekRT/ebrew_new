@@ -66,6 +66,30 @@ Route::get('/debug/database', function () {
     }
 })->name('debug.database');
 
+// Manual seed route (remove after use)
+Route::get('/manual-seed', function () {
+    try {
+        // Check if items already exist
+        $itemCount = \App\Models\Item::count();
+        if ($itemCount > 0) {
+            return "Database already has {$itemCount} items. Skipping seeding.";
+        }
+        
+        // Run only ProductSeeder
+        Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
+        
+        $newItemCount = \App\Models\Item::count();
+        $productCount = \App\Models\Product::count();
+        
+        return "✅ Database seeded successfully! Created {$newItemCount} items and {$productCount} products.";
+        
+    } catch (\Exception $e) {
+        return "❌ Error seeding database: " . $e->getMessage();
+    }
+})->name('manual.seed');
+
+// Temporary seeding route has been removed for security
+
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');

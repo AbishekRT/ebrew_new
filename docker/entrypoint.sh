@@ -9,8 +9,8 @@ mkdir -p /var/www/html/bootstrap/cache
 # Set proper permissions
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Run migrations and seed
-php artisan migrate --force && php artisan db:seed --force
+# Run migrations only (no automatic seeding to avoid duplicates)
+php artisan migrate --force
 
 # Start Apache in foreground
 exec apache2-foreground
