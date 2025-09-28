@@ -14,8 +14,9 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache modules
+RUN a2enmod rewrite headers \
+    && service apache2 restart
 
 # Suppress Apache ServerName warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
@@ -36,8 +37,7 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --optimize-autoloader
 
-# Install Node dependencies and build production assetsartisan serve
-
+# Install Node dependencies and build production assets
 RUN npm ci --silent
 ENV NODE_ENV=production
 
@@ -58,7 +58,7 @@ RUN if [ ! -f /var/www/html/public/build/manifest.json ]; then \
         echo "Vite build successful - manifest.json created"; \
     fi
 
-# Verify build output exists and show contents
+# Verify build output exists
 RUN ls -la /var/www/html/public/build/ \
     && ls -la /var/www/html/public/build/assets/ || echo "No assets directory" \
     && ls -la /var/www/html/public/build/.vite/ || echo "No .vite directory" \
@@ -80,10 +80,10 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 # Create a simple health check endpoint
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/health.php
 
-# Configure Apache for HTTPS handling
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
-    echo "LoadModule headers_module modules/mod_headers.so" >> /etc/apache2/apache2.conf && \
-    echo "Header always set X-Forwarded-Proto https" >> /etc/apache2/apache2.conf
+# Configure Apache for HTTPS behind a proxy
+RUN echo "Header always set X-Forwarded-Proto https" >> /etc/apache2/conf-available/headers.conf \
+    && a2enconf headers \
+    && service apache2 restart
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
