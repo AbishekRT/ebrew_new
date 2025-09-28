@@ -31,7 +31,49 @@ Route::get('/debug/assets', function () {
     return view('debug.assets');
 })->name('debug.assets');
 
-// Debug and seeding routes removed for security after successful deployment
+// Simple test route (no database)
+Route::get('/test-app', function () {
+    return response()->json([
+        'status' => '✅ Laravel App Working',
+        'timestamp' => now(),
+        'environment' => env('APP_ENV'),
+        'database_url_set' => env('DATABASE_URL') ? 'YES' : 'NO'
+    ]);
+});
+
+// Debug route to check database connection
+Route::get('/debug-db', function () {
+    try {
+        $databaseUrl = env('DATABASE_URL');
+        $dbConfig = config('database.connections.mysql');
+        
+        // Test database connection
+        $pdo = DB::connection()->getPdo();
+        
+        return response()->json([
+            'status' => '✅ Database Connected',
+            'database_url' => $databaseUrl ? 'SET' : 'NOT SET',
+            'parsed_config' => [
+                'host' => $dbConfig['host'] ?? 'not set',
+                'port' => $dbConfig['port'] ?? 'not set', 
+                'database' => $dbConfig['database'] ?? 'not set',
+                'username' => $dbConfig['username'] ?? 'not set'
+            ],
+            'tables_count' => DB::select('SHOW TABLES')
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => '❌ Database Connection Failed',
+            'error' => $e->getMessage(),
+            'database_url' => env('DATABASE_URL') ? 'SET' : 'NOT SET',
+            'env_check' => [
+                'APP_ENV' => env('APP_ENV'),
+                'DATABASE_URL' => env('DATABASE_URL') ? substr(env('DATABASE_URL'), 0, 20) . '...' : 'NOT SET'
+            ]
+        ], 500);
+    }
+});
 
 // Temporary seeding route has been removed for security
 
