@@ -30,11 +30,19 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             URL::forceScheme('https');
             
-            // Ensure Vite uses correct URLs in production
+            // Force all asset URLs to use HTTPS
             if (config('app.url')) {
                 $appUrl = config('app.url');
-                // Make sure asset URLs use the correct domain
+                // Ensure asset URLs use HTTPS
                 config(['app.asset_url' => $appUrl]);
+                
+                // Force root URL to use HTTPS
+                URL::forceRootUrl($appUrl);
+            }
+            
+            // Additional security headers
+            if (request()->isSecure()) {
+                URL::forceScheme('https');
             }
         }
     }

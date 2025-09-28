@@ -80,6 +80,11 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 # Create a simple health check endpoint
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/health.php
 
+# Configure Apache for HTTPS handling
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    echo "LoadModule headers_module modules/mod_headers.so" >> /etc/apache2/apache2.conf && \
+    echo "Header always set X-Forwarded-Proto https" >> /etc/apache2/apache2.conf
+
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost/health.php || exit 1
