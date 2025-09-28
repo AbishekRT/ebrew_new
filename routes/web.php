@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FaqController;
@@ -161,3 +162,29 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/terminate-sessions', [ProfileController::class, 'terminateOtherSessions'])->name('profile.terminate-sessions');
     Route::get('/profile/download-data', [ProfileController::class, 'downloadData'])->name('profile.download-data');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Database Seeding Route (Temporary - Remove after use)
+|--------------------------------------------------------------------------
+*/
+// Only accessible in production environment for one-time seeding
+Route::get('/seed-database-now', function () {
+    try {
+        // Only allow in production (Railway environment)
+        if (config('app.env') !== 'production') {
+            return 'This route only works in production environment';
+        }
+
+        // Run the seeder
+        Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
+        
+        $itemCount = \App\Models\Item::count();
+        $productCount = \App\Models\Product::count();
+        
+        return "Database seeded successfully! Created {$itemCount} items and {$productCount} products.";
+        
+    } catch (\Exception $e) {
+        return "Error seeding database: " . $e->getMessage();
+    }
+})->name('seed.database');
