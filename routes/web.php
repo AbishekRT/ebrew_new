@@ -31,51 +31,40 @@ Route::get('/debug/assets', function () {
     return view('debug.assets');
 })->name('debug.assets');
 
-// Simple test route (no database)
-Route::get('/test-app', function () {
-    return response()->json([
-        'status' => '✅ Laravel App Working',
-        'timestamp' => now(),
-        'environment' => env('APP_ENV'),
-        'database_url_set' => env('DATABASE_URL') ? 'YES' : 'NO'
-    ]);
-});
-
-// Debug route to check database connection
-Route::get('/debug-db', function () {
+// Debug route for database connection
+Route::get('/debug/database', function () {
     try {
-        $databaseUrl = env('DATABASE_URL');
         $dbConfig = config('database.connections.mysql');
-        
-        // Test database connection
-        $pdo = DB::connection()->getPdo();
+        $dbTest = DB::connection()->getPdo();
+        $items = \App\Models\Item::count();
         
         return response()->json([
-            'status' => '✅ Database Connected',
-            'database_url' => $databaseUrl ? 'SET' : 'NOT SET',
-            'parsed_config' => [
-                'host' => $dbConfig['host'] ?? 'not set',
-                'port' => $dbConfig['port'] ?? 'not set', 
-                'database' => $dbConfig['database'] ?? 'not set',
-                'username' => $dbConfig['username'] ?? 'not set'
+            'database_status' => 'Connected ✅',
+            'connection_config' => [
+                'host' => $dbConfig['host'],
+                'port' => $dbConfig['port'],
+                'database' => $dbConfig['database'],
+                'username' => $dbConfig['username']
             ],
-            'tables_count' => DB::select('SHOW TABLES')
+            'items_count' => $items,
+            'php_version' => PHP_VERSION,
+            'laravel_version' => app()->version()
         ]);
-        
     } catch (\Exception $e) {
         return response()->json([
-            'status' => '❌ Database Connection Failed',
+            'database_status' => 'Failed ❌',
             'error' => $e->getMessage(),
-            'database_url' => env('DATABASE_URL') ? 'SET' : 'NOT SET',
-            'env_check' => [
-                'APP_ENV' => env('APP_ENV'),
-                'DATABASE_URL' => env('DATABASE_URL') ? substr(env('DATABASE_URL'), 0, 20) . '...' : 'NOT SET'
+            'config' => config('database.connections.mysql'),
+            'env_vars' => [
+                'DB_HOST' => env('DB_HOST'),
+                'DB_PORT' => env('DB_PORT'),
+                'DB_DATABASE' => env('DB_DATABASE'),
+                'DB_USERNAME' => env('DB_USERNAME'),
+                'DB_PASSWORD' => env('DB_PASSWORD') ? 'SET' : 'EMPTY'
             ]
         ], 500);
     }
-});
-
-// Temporary seeding route has been removed for security
+})->name('debug.database');
 
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
