@@ -29,6 +29,16 @@ Route::get('/debug/assets', function () {
     return view('debug.assets');
 })->name('debug.assets');
 
+// Health check route for Railway
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'OK',
+        'timestamp' => now()->toISOString(),
+        'app' => config('app.name'),
+        'env' => config('app.env')
+    ]);
+});
+
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
