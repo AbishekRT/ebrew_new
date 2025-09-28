@@ -126,88 +126,88 @@ class ProductSeeder extends Seeder
             ]);
         }
 
-        // Insert Items using Item model (legacy support)
+        // Insert Items using Item model (matches actual table structure)
         $itemsData = [
             [
-                'ItemID' => 1,
                 'Name' => 'Espresso Blend Premium',
                 'Description' => 'Rich and bold espresso perfect for morning energy. Premium Arabica blend with dark chocolate notes.',
                 'Price' => 24.99,
-                'Category' => 'Coffee',
-                'image_url' => 'images/1.png',
-                'Stock' => 50
+                'Image' => 'images/1.png',
+                'TastingNotes' => 'Dark chocolate, caramel, nuts',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(3)
             ],
             [
-                'ItemID' => 2,
                 'Name' => 'Colombian Supreme Single Origin',
                 'Description' => 'Single-origin Colombian coffee with bright acidity and fruity undertones from Huila region.',
                 'Price' => 28.99,
-                'Category' => 'Coffee',
-                'image_url' => 'images/2.png',
-                'Stock' => 35
+                'Image' => 'images/2.png',
+                'TastingNotes' => 'Citrus, berries, bright acidity',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(2)
             ],
             [
-                'ItemID' => 3,
                 'Name' => 'French Roast Dark & Bold',
                 'Description' => 'Bold and smoky French roast with intense flavors for strong coffee lovers.',
                 'Price' => 22.99,
-                'Category' => 'Coffee',
-                'image_url' => 'images/3.png',
-                'Stock' => 40
+                'Image' => 'images/3.png',
+                'TastingNotes' => 'Smoky, bold, intense',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(1)
             ],
             [
-                'ItemID' => 4,
                 'Name' => 'Ethiopia Yirgacheffe Light',
                 'Description' => 'Light roast Ethiopian coffee with floral and citrus notes. Wine-like acidity.',
                 'Price' => 32.99,
-                'Category' => 'Coffee',
-                'image_url' => 'images/4.png',
-                'Stock' => 25
+                'Image' => 'images/4.png',
+                'TastingNotes' => 'Floral, wine-like, citrus',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(4)
             ],
             [
-                'ItemID' => 5,
                 'Name' => 'Brazilian Santos Medium',
                 'Description' => 'Medium roast Brazilian coffee with nutty and chocolate flavors. Smooth and balanced.',
                 'Price' => 26.99,
-                'Category' => 'Coffee',
-                'image_url' => 'images/5.jpg',
-                'Stock' => 45
+                'Image' => 'images/5.jpg',
+                'TastingNotes' => 'Nutty, chocolate, smooth',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(5)
             ],
             [
-                'ItemID' => 6,
                 'Name' => 'Guatemala Antigua Volcanic',
                 'Description' => 'Full-bodied Guatemalan coffee with spicy characteristics from volcanic soil.',
                 'Price' => 30.99,
-                'Category' => 'Coffee',
-                'image_url' => 'images/6.jpg',
-                'Stock' => 30
+                'Image' => 'images/6.jpg',
+                'TastingNotes' => 'Spicy, full-body, volcanic minerals',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(6)
             ],
             [
-                'ItemID' => 7,
                 'Name' => 'Cold Brew Concentrate',
                 'Description' => 'Smooth and refreshing cold brew concentrate. Perfect for iced coffee.',
                 'Price' => 18.99,
-                'Category' => 'Beverages',
-                'image_url' => 'images/B1.png',
-                'Stock' => 60
+                'Image' => 'images/B1.png',
+                'TastingNotes' => 'Smooth, refreshing, concentrated',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(7)
             ],
             [
-                'ItemID' => 8,
                 'Name' => 'Chai Tea Latte Mix',
                 'Description' => 'Aromatic chai blend with warming spices for cozy afternoons.',
                 'Price' => 16.99,
-                'Category' => 'Beverages',
-                'image_url' => 'images/B2.png',
-                'Stock' => 40
+                'Image' => 'images/B2.png',
+                'TastingNotes' => 'Cinnamon, cardamom, ginger, cloves',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(8)
             ],
             [
-                'ItemID' => 9,
                 'Name' => 'Matcha Green Tea Powder',
                 'Description' => 'Premium Japanese matcha powder rich in antioxidants.',
                 'Price' => 34.99,
-                'Category' => 'Beverages',
-                'image_url' => 'images/B3.jpg',
-                'Stock' => 20
+                'Image' => 'images/B3.jpg',
+                'TastingNotes' => 'Grassy, umami, vegetal',
+                'ShippingAndReturns' => 'Free shipping on orders over $50. 30-day return policy.',
+                'RoastDates' => now()->subDays(9)
             ]
         ];
 

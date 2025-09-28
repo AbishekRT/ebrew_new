@@ -23,7 +23,7 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10">
                 @forelse($featuredProducts as $product)
-                    <a href="{{ url('products/'.$product->ItemID) }}" 
+                    <a href="{{ url('products/'.$product->id) }}" 
                        class="group bg-white rounded-lg shadow-md p-4 transition hover:shadow-xl">
                         <img src="{{ $product->image_url }}" 
                              alt="{{ $product->Name }}" 
