@@ -36,7 +36,8 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --optimize-autoloader
 
-# Install Node dependencies and build production assets
+# Install Node dependencies and build production assetsartisan serve
+
 RUN npm ci --silent
 ENV NODE_ENV=production
 

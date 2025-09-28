@@ -24,6 +24,11 @@ use App\Http\Controllers\CheckoutController;
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Debug route for asset loading (remove in production)
+Route::get('/debug/assets', function () {
+    return view('debug.assets');
+})->name('debug.assets');
+
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');

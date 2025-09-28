@@ -1,0 +1,12 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "always"
+
+[environments.production.variables]
+APP_ENV = "production"
+APP_DEBUG = "false"
+LOG_LEVEL = "info"
