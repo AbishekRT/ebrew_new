@@ -163,28 +163,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/download-data', [ProfileController::class, 'downloadData'])->name('profile.download-data');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Database Seeding Route (Temporary - Remove after use)
-|--------------------------------------------------------------------------
-*/
-// Only accessible in production environment for one-time seeding
-Route::get('/seed-database-now', function () {
-    try {
-        // Only allow in production (Railway environment)
-        if (config('app.env') !== 'production') {
-            return 'This route only works in production environment';
-        }
-
-        // Run the seeder
-        Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
-        
-        $itemCount = \App\Models\Item::count();
-        $productCount = \App\Models\Product::count();
-        
-        return "Database seeded successfully! Created {$itemCount} items and {$productCount} products.";
-        
-    } catch (\Exception $e) {
-        return "Error seeding database: " . $e->getMessage();
-    }
-})->name('seed.database');
+// Temporary seeding route has been removed for security
