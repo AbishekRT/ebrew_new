@@ -31,62 +31,7 @@ Route::get('/debug/assets', function () {
     return view('debug.assets');
 })->name('debug.assets');
 
-// Debug route for database connection
-Route::get('/debug/database', function () {
-    try {
-        $dbConfig = config('database.connections.mysql');
-        $dbTest = DB::connection()->getPdo();
-        $items = \App\Models\Item::count();
-        
-        return response()->json([
-            'database_status' => 'Connected ✅',
-            'connection_config' => [
-                'host' => $dbConfig['host'],
-                'port' => $dbConfig['port'],
-                'database' => $dbConfig['database'],
-                'username' => $dbConfig['username']
-            ],
-            'items_count' => $items,
-            'php_version' => PHP_VERSION,
-            'laravel_version' => app()->version()
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'database_status' => 'Failed ❌',
-            'error' => $e->getMessage(),
-            'config' => config('database.connections.mysql'),
-            'env_vars' => [
-                'DB_HOST' => env('DB_HOST'),
-                'DB_PORT' => env('DB_PORT'),
-                'DB_DATABASE' => env('DB_DATABASE'),
-                'DB_USERNAME' => env('DB_USERNAME'),
-                'DB_PASSWORD' => env('DB_PASSWORD') ? 'SET' : 'EMPTY'
-            ]
-        ], 500);
-    }
-})->name('debug.database');
-
-// Manual seed route (remove after use)
-Route::get('/manual-seed', function () {
-    try {
-        // Check if items already exist
-        $itemCount = \App\Models\Item::count();
-        if ($itemCount > 0) {
-            return "Database already has {$itemCount} items. Skipping seeding.";
-        }
-        
-        // Run only ProductSeeder
-        Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
-        
-        $newItemCount = \App\Models\Item::count();
-        $productCount = \App\Models\Product::count();
-        
-        return "✅ Database seeded successfully! Created {$newItemCount} items and {$productCount} products.";
-        
-    } catch (\Exception $e) {
-        return "❌ Error seeding database: " . $e->getMessage();
-    }
-})->name('manual.seed');
+// Debug and seeding routes removed for security after successful deployment
 
 // Temporary seeding route has been removed for security
 
