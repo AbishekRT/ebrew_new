@@ -14,9 +14,8 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Enable Apache modules
-RUN a2enmod rewrite headers \
-    && service apache2 restart
+# Enable Apache modules (rewrite + headers)
+RUN a2enmod rewrite headers
 
 # Suppress Apache ServerName warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
@@ -27,7 +26,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy entrypoint script BEFORE copying project files
+# Copy entrypoint script before project files
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
@@ -37,17 +36,17 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --optimize-autoloader
 
-# Install Node dependencies and build production assets
+# Install Node dependencies and set production environment
 RUN npm ci --silent
 ENV NODE_ENV=production
 
-# Clean any previous build
+# Clean previous build
 RUN rm -rf /var/www/html/public/build
 
-# Build assets with detailed output
-RUN NODE_ENV=production npm run build
+# Build Vite assets
+RUN npm run build
 
-# Create fallback manifest and assets if not generated
+# Create fallback manifest/assets if Vite failed
 RUN if [ ! -f /var/www/html/public/build/manifest.json ]; then \
     echo "Vite build did not create manifest, creating fallback..." && \
     mkdir -p /var/www/html/public/build/assets && \
@@ -58,18 +57,12 @@ RUN if [ ! -f /var/www/html/public/build/manifest.json ]; then \
     echo "Vite build successful - manifest.json created"; \
     fi
 
-# Verify build output exists
-RUN ls -la /var/www/html/public/build/ \
-    && ls -la /var/www/html/public/build/assets/ || echo "No assets directory" \
-    && ls -la /var/www/html/public/build/.vite/ || echo "No .vite directory" \
-    && (cat /var/www/html/public/build/manifest.json || echo "No manifest.json found")
-
 # Set permissions for Laravel and Vite assets
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Ensure public/build directory exists and has correct permissions
+# Ensure public/build exists and has correct permissions
 RUN mkdir -p /var/www/html/public/build \
     && chown -R www-data:www-data /var/www/html/public \
     && chmod -R 755 /var/www/html/public
@@ -77,11 +70,15 @@ RUN mkdir -p /var/www/html/public/build \
 # Make Apache serve the public folder
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Create a simple health check endpoint
+# Create health check endpoint
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/health.php
 
-# Expose Apache port
+# Expose port 80
 EXPOSE 80
+
+# Add healthcheck for Railway
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost/health.php || exit 1
 
 # Start Apache via entrypoint
 ENTRYPOINT ["entrypoint.sh"]
