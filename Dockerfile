@@ -70,15 +70,8 @@ RUN mkdir -p /var/www/html/public/build \
 # Make Apache serve the public folder
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Create health check endpoint
-RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/health.php
-
 # Expose port 80
 EXPOSE 80
-
-# Add healthcheck for Railway
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost/health.php || exit 1
 
 # Start Apache via entrypoint
 ENTRYPOINT ["entrypoint.sh"]

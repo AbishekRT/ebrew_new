@@ -2,8 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-healthcheckPath = "/health.php"
-healthcheckTimeout = 120
 restartPolicyType = "always"
 
 [environments.production.variables]
