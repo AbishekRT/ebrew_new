@@ -49,13 +49,13 @@ RUN NODE_ENV=production npm run build
 
 # Create fallback manifest and assets if not generated
 RUN if [ ! -f /var/www/html/public/build/manifest.json ]; then \
-        echo "Vite build did not create manifest, creating fallback..." && \
-        mkdir -p /var/www/html/public/build/assets && \
-        echo '{"resources/css/app.css":{"file":"assets/app.css","src":"resources/css/app.css","isEntry":true},"resources/js/app.js":{"file":"assets/app.js","src":"resources/js/app.js","isEntry":true}}' > /var/www/html/public/build/manifest.json && \
-        echo "/* Fallback CSS */" > /var/www/html/public/build/assets/app.css && \
-        echo "console.log('Fallback JS loaded');" > /var/www/html/public/build/assets/app.js; \
+    echo "Vite build did not create manifest, creating fallback..." && \
+    mkdir -p /var/www/html/public/build/assets && \
+    echo '{"resources/css/app.css":{"file":"assets/app.css","src":"resources/css/app.css","isEntry":true},"resources/js/app.js":{"file":"assets/app.js","src":"resources/js/app.js","isEntry":true}}' > /var/www/html/public/build/manifest.json && \
+    echo "/* Fallback CSS */" > /var/www/html/public/build/assets/app.css && \
+    echo "console.log('Fallback JS loaded');" > /var/www/html/public/build/assets/app.js; \
     else \
-        echo "Vite build successful - manifest.json created"; \
+    echo "Vite build successful - manifest.json created"; \
     fi
 
 # Verify build output exists
@@ -79,15 +79,6 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 
 # Create a simple health check endpoint
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/health.php
-
-# Configure Apache for HTTPS behind a proxy
-RUN echo "Header always set X-Forwarded-Proto https" >> /etc/apache2/conf-available/headers.conf \
-    && a2enconf headers \
-    && service apache2 restart
-
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost/health.php || exit 1
 
 # Expose Apache port
 EXPOSE 80

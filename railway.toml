@@ -2,12 +2,10 @@
 builder = "nixpacks"
 
 [deploy]
-healthcheckPath = "/health"
-healthcheckTimeout = 300
+healthcheckPath = "/health.php"
+healthcheckTimeout = 120
 restartPolicyType = "always"
-startCommand = "entrypoint.sh"
 
 [environments.production.variables]
 APP_ENV = "production"
 APP_DEBUG = "false"
-LOG_LEVEL = "info"
