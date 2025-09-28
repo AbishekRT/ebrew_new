@@ -31,40 +31,77 @@ Route::get('/debug/assets', function () {
     return view('debug.assets');
 })->name('debug.assets');
 
-// Debug route for database connection
-Route::get('/debug/database', function () {
+// Manual database seeder (TEMPORARY - Remove after use)
+Route::get('/seed-products', function () {
     try {
-        $dbConfig = config('database.connections.mysql');
-        $dbTest = DB::connection()->getPdo();
-        $items = \App\Models\Item::count();
+        // Check current state
+        $itemCount = \App\Models\Item::count();
+        $userCount = \App\Models\User::count();
+        
+        if ($itemCount > 0) {
+            return response()->json([
+                'status' => 'ℹ️ Already Seeded',
+                'message' => "Database already has {$itemCount} items. Clear first if you want to re-seed.",
+                'current_counts' => [
+                    'items' => $itemCount,
+                    'users' => $userCount
+                ]
+            ]);
+        }
+        
+        // Run ProductSeeder only
+        Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
+        
+        // Get final counts
+        $newItemCount = \App\Models\Item::count();
+        $productCount = \App\Models\Product::count();
         
         return response()->json([
-            'database_status' => 'Connected ✅',
-            'connection_config' => [
-                'host' => $dbConfig['host'],
-                'port' => $dbConfig['port'],
-                'database' => $dbConfig['database'],
-                'username' => $dbConfig['username']
-            ],
-            'items_count' => $items,
-            'php_version' => PHP_VERSION,
-            'laravel_version' => app()->version()
+            'status' => '✅ Seeding Successful',
+            'message' => "Database populated successfully!",
+            'created' => [
+                'items' => $newItemCount,
+                'products' => $productCount
+            ]
         ]);
+        
     } catch (\Exception $e) {
         return response()->json([
-            'database_status' => 'Failed ❌',
+            'status' => '❌ Seeding Failed',
             'error' => $e->getMessage(),
-            'config' => config('database.connections.mysql'),
-            'env_vars' => [
-                'DB_HOST' => env('DB_HOST'),
-                'DB_PORT' => env('DB_PORT'),
-                'DB_DATABASE' => env('DB_DATABASE'),
-                'DB_USERNAME' => env('DB_USERNAME'),
-                'DB_PASSWORD' => env('DB_PASSWORD') ? 'SET' : 'EMPTY'
-            ]
+            'trace' => $e->getTraceAsString()
         ], 500);
     }
-})->name('debug.database');
+});
+
+// Clear and reseed (use with caution)
+Route::get('/clear-and-seed', function () {
+    try {
+        // Truncate and reseed
+        \App\Models\Item::truncate();
+        \App\Models\Product::truncate();
+        
+        Artisan::call('db:seed', ['--class' => 'ProductSeeder']);
+        
+        $itemCount = \App\Models\Item::count();
+        $productCount = \App\Models\Product::count();
+        
+        return response()->json([
+            'status' => '✅ Reset Complete',
+            'message' => "Database cleared and reseeded successfully!",
+            'created' => [
+                'items' => $itemCount,
+                'products' => $productCount
+            ]
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => '❌ Reset Failed', 
+            'error' => $e->getMessage()
+        ], 500);
+    }
+});
 
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
