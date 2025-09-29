@@ -26,12 +26,16 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
                 @forelse($products as $product)
-                    <a href="{{ route('products.show', $product->id) }}" 
-                       class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
+                    @if($product && $product->id)
+                        <a href="{{ route('products.show', $product->id) }}" 
+                           class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
+                    @else
+                        <div class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px] cursor-not-allowed opacity-75">
+                    @endif
 
                         <!-- Product Image -->
                         <div class="aspect-w-1 aspect-h-1">
-                            <img src="{{ $product->image_url }}" 
+                            <img src="{{ $product->image_url ?? asset('images/default.png') }}" 
                                  alt="{{ $product->Name ?? 'Product' }}" 
                                  class="w-full h-full object-contain rounded">
                         </div>
@@ -45,7 +49,16 @@
                         <p class="text-red-600 font-bold mt-2">
                             Rs. {{ number_format($product->Price ?? 0, 2) }}
                         </p>
-                    </a>
+
+                        @if(!$product || !$product->id)
+                            <p class="text-xs text-gray-500 mt-1">ID: {{ $product->id ?? 'Missing' }}</p>
+                        @endif
+
+                    @if($product && $product->id)
+                        </a>
+                    @else
+                        </div>
+                    @endif
                 @empty
                     <p class="text-gray-500">No products available.</p>
                 @endforelse
