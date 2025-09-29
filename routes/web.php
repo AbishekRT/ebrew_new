@@ -200,3 +200,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Temporary seeding route has been removed for security
+
+// Debug routes (REMOVE IN PRODUCTION)
+if (app()->environment(['local', 'staging']) || env('APP_DEBUG')) {
+    require __DIR__.'/debug.php';
+}
