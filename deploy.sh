@@ -21,7 +21,7 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Run database migrations
+# Run database migrations (sessions table already exists on Railway)
 echo "Running database migrations..."
 php artisan migrate --force
 
