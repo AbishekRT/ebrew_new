@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Review extends Model
 {
@@ -113,6 +114,6 @@ class Review extends Model
      */
     public function getShortCommentAttribute()
     {
-        return str_limit($this->comment, 100);
+        return Str::limit($this->comment, 100);
     }
 }

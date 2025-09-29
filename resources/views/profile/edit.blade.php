@@ -36,7 +36,7 @@
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
                         <input type="text" name="name" id="name" 
                                value="{{ old('name', $user->name) }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 @error('name') border-red-500 @enderror" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-yellow-500 focus:border-yellow-500 @if($errors->has('name')) border-red-500 @else border-gray-300 @endif" 
                                required>
                         @error('name')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -48,7 +48,7 @@
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" name="email" id="email" 
                                value="{{ old('email', $user->email) }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 @error('email') border-red-500 @enderror" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-yellow-500 focus:border-yellow-500 @if($errors->has('email')) border-red-500 @else border-gray-300 @endif" 
                                required>
                         @error('email')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -88,7 +88,7 @@
                     <div>
                         <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
                         <input type="password" name="current_password" id="current_password" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 @error('current_password') border-red-500 @enderror" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-yellow-500 focus:border-yellow-500 @if($errors->has('current_password')) border-red-500 @else border-gray-300 @endif" 
                                required>
                         @error('current_password')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -99,7 +99,7 @@
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                         <input type="password" name="password" id="password" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 @error('password') border-red-500 @enderror" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-yellow-500 focus:border-yellow-500 @if($errors->has('password')) border-red-500 @else border-gray-300 @endif" 
                                required>
                         @error('password')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

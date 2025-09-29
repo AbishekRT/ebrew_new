@@ -170,6 +170,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             @forelse($recommended as $product)
                 <div class="border border-gray-200 rounded-xl p-4 shadow hover:shadow-lg text-center transition-all duration-300 hover:scale-105">
+                    <!-- Product Image with Fallback -->
                     <img src="{{ asset('images/uploads/'.$product->ProductID.'.png') }}" 
                          class="h-32 w-32 mx-auto mb-3 rounded-lg object-cover border-2 border-gray-100" 
                          onerror="this.src='{{ asset('images/placeholder.png') }}'">

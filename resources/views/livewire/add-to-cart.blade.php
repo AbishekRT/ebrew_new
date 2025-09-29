@@ -55,7 +55,7 @@
         <script>
             // Auto-hide notification after 4 seconds
             setTimeout(function() {
-                @this.hideNotification();
+                Livewire.find('{{ $_instance->getId() }}').call('hideNotification');
             }, 4000);
         </script>
     @endif

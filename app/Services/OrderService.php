@@ -9,6 +9,7 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\User;
 use App\Models\Item;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Exception;
@@ -221,6 +222,6 @@ class OrderService
     {
         // This would typically update inventory levels
         // For now, just log the successful payment processing
-        \Log::info("Payment processed for order {$order->OrderID}");
+        Log::info("Payment processed for order {$order->OrderID}");
     }
 }

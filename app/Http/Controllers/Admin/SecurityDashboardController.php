@@ -99,16 +99,22 @@ class SecurityDashboardController extends Controller
             ->where('login_at', '>=', now()->subMonth())
             ->get();
 
+        $deviceStats = collect($recentLogins->groupBy('device_type'))
+            ->map(function ($group) { return $group->count(); })
+            ->sortDesc();
+        
+        $browserStats = collect($recentLogins->groupBy('browser'))
+            ->map(function ($group) { return $group->count(); })
+            ->sortDesc();
+            
+        $platformStats = collect($recentLogins->groupBy('platform'))
+            ->map(function ($group) { return $group->count(); })
+            ->sortDesc();
+
         return [
-            'devices' => $recentLogins->groupBy('device_type')
-                ->map->count()
-                ->sortDesc(),
-            'browsers' => $recentLogins->groupBy('browser')
-                ->map->count()
-                ->sortDesc(),
-            'platforms' => $recentLogins->groupBy('platform')
-                ->map->count()
-                ->sortDesc(),
+            'devices' => $deviceStats,
+            'browsers' => $browserStats,
+            'platforms' => $platformStats,
         ];
     }
 

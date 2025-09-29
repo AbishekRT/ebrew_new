@@ -111,14 +111,21 @@
     </div>
 </div>
 
+@auth
 <script>
 function handleCartClick(event) {
-    @guest
-        event.preventDefault();
-        alert('Please log in to view your cart.');
-        window.location.href = '{{ route("login") }}';
-        return false;
-    @endguest
     return true;
 }
 </script>
+@endauth
+
+@guest
+<script>
+function handleCartClick(event) {
+    event.preventDefault();
+    alert('Please log in to view your cart.');
+    window.location.href = '{{ route("login") }}';
+    return false;
+}
+</script>
+@endguest

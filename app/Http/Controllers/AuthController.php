@@ -28,6 +28,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Check user role and redirect accordingly
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             
             if ($user->isAdmin()) {

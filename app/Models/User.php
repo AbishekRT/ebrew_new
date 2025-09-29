@@ -10,6 +10,18 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @method bool isAdmin()
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany orders()
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany reviews()
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany loginHistories()
+ * @method float totalSpent()
+ * @method int getActiveSessionCount()
+ * @method array getSessionStats()
+ * @method array getSecuritySettings()
+ * @method void updateSecuritySettings(array $settings)
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany recentLoginAttempts(int $days)
+ */
 class User extends Authenticatable 
 // implements MustVerifyEmail
 {

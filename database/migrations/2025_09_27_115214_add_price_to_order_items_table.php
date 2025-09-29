@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -16,7 +17,7 @@ return new class extends Migration
         });
         
         // Update existing order_items with current item prices
-        \DB::statement('
+        DB::statement('
             UPDATE order_items oi
             INNER JOIN items i ON oi.ItemID = i.id 
             SET oi.Price = i.Price 

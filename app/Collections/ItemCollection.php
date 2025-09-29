@@ -158,7 +158,7 @@ class ItemCollection extends Collection
 
         switch ($format) {
             case 'json':
-                return json_encode($data);
+                return json_decode(json_encode($data), true) ?: [];
             case 'csv':
                 // Would implement CSV export logic here
                 return $data->toArray();

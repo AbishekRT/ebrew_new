@@ -18,13 +18,15 @@ class LoginListener
      */
     public function handleLogin(Login $event): void
     {
-        $loginHistory = LoginHistory::createFromRequest($event->user->id, true);
+        /** @var \App\Models\User $user */
+        $user = $event->user;
+        $loginHistory = LoginHistory::createFromRequest($user->getKey(), true);
         
         // Store the login history ID in session for logout tracking
         Session::put('login_history_id', $loginHistory->id);
         
         // Update last login timestamp on user
-        $event->user->update([
+        $user->update([
             'last_login_at' => now(),
             'last_login_ip' => Request::ip(),
         ]);

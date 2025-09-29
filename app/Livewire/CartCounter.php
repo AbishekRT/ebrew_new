@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CartCounter extends Component
 {
@@ -20,7 +21,7 @@ class CartCounter extends Component
 
     public function updateCount()
     {
-        \Log::info('CartCounter: Updating count', ['is_auth' => Auth::check()]);
+        Log::info('CartCounter: Updating count', ['is_auth' => Auth::check()]);
         
         if (Auth::check()) {
             // Authenticated user - get from database
@@ -35,13 +36,13 @@ class CartCounter extends Component
             // Guest user - get from session
             $sessionCart = session()->get('cart', []);
             $this->cartCount = collect($sessionCart)->sum('quantity');
-            \Log::info('CartCounter: Guest cart count', [
+            Log::info('CartCounter: Guest cart count', [
                 'session_cart' => $sessionCart,
                 'count' => $this->cartCount
             ]);
         }
         
-        \Log::info('CartCounter: Final count', ['count' => $this->cartCount]);
+        Log::info('CartCounter: Final count', ['count' => $this->cartCount]);
     }
 
     public function render()

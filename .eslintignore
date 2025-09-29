@@ -1,0 +1,5 @@
+# Ignore Blade template parsing issues
+resources/views/**/*.blade.php
+
+# These files contain mixed Blade/HTML/CSS/JavaScript
+# which causes VS Code parsing errors but are functionally correct

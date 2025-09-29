@@ -78,14 +78,20 @@
     </div>
 </div>
 
+@guest
 <script>
 function handleCartClick(event) {
-    @guest
-        event.preventDefault();
-        alert('Please log in to view your cart.');
-        window.location.href = '{{ route("login") }}';
-        return false;
-    @endguest
+    event.preventDefault();
+    alert('Please log in to view your cart.');
+    window.location.href = '{{ route("login") }}';
+    return false;
+}
+</script>
+@endguest
+
+@auth
+<script>
+function handleCartClick(event) {
     return true;
 }
 </script>

@@ -16,6 +16,7 @@ class ProfileController extends Controller
      */
     public function edit()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $loginHistory = $user->recentLoginAttempts(30)->limit(10)->get();
         $activeSessionsCount = $user->getActiveSessionCount();

@@ -39,6 +39,7 @@
                     <div class="flex items-center space-x-4 bg-gray-50 rounded-lg p-4" wire:key="cart-item-{{ $cartItem['id'] }}">
                         <!-- Product Image -->
                         <div class="flex-shrink-0">
+                            <!-- Cart Item Image with Fallback -->
                             <img src="{{ $cartItem['item']['image_url'] ?? asset('images/default.png') }}" 
                                  alt="{{ $cartItem['item']['Name'] ?? 'Product' }}" 
                                  class="w-20 h-20 object-cover rounded-lg"
@@ -145,7 +146,7 @@
     // Auto-hide notification after 3 seconds
     window.addEventListener('hideNotification', () => {
         setTimeout(() => {
-            @this.hideNotification();
+            Livewire.find('{{ $_instance->getId() }}').call('hideNotification');
         }, 3000);
     });
 </script>

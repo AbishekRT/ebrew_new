@@ -89,7 +89,7 @@ class Order extends Model
      */
     public function getFormattedSubTotalAttribute()
     {
-        return 'LKR ' . number_format($this->SubTotal, 2);
+        return 'LKR ' . number_format((float) $this->SubTotal, 2);
     }
 
     /**

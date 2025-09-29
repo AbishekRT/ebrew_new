@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AddToCart extends Component
 {
@@ -40,7 +41,7 @@ class AddToCart extends Component
 
     public function addToCart()
     {
-        \Log::info('AddToCart: Method called', [
+        Log::info('AddToCart: Method called', [
             'item_id' => $this->item->ItemID,
             'quantity' => $this->quantity,
             'is_auth' => Auth::check()
@@ -51,16 +52,16 @@ class AddToCart extends Component
         try {
             if (Auth::check()) {
                 // Authenticated user - save to database
-                \Log::info('AddToCart: Authenticated user cart');
+                Log::info('AddToCart: Authenticated user cart');
                 $cart = Cart::firstOrCreate(['UserID' => Auth::id()]);
-                \Log::info('AddToCart: Cart created/found', ['cart_id' => $cart->CartID]);
+                Log::info('AddToCart: Cart created/found', ['cart_id' => $cart->CartID]);
                 
                 $existingCartItem = CartItem::where('CartID', $cart->CartID)
                     ->where('ItemID', $this->item->ItemID)
                     ->first();
 
                 if ($existingCartItem) {
-                    \Log::info('AddToCart: Updating existing item', [
+                    Log::info('AddToCart: Updating existing item', [
                         'cart_item_id' => $existingCartItem->getKey(),
                         'primary_key' => $existingCartItem->getKeyName(),
                         'current_quantity' => $existingCartItem->Quantity
@@ -71,7 +72,7 @@ class AddToCart extends Component
                            ->where('ItemID', $this->item->ItemID)
                            ->increment('Quantity', $this->quantity);
                 } else {
-                    \Log::info('AddToCart: Creating new cart item');
+                    Log::info('AddToCart: Creating new cart item');
                     CartItem::create([
                         'CartID' => $cart->CartID,
                         'ItemID' => $this->item->ItemID,
@@ -80,9 +81,9 @@ class AddToCart extends Component
                 }
             } else {
                 // Guest user - save to session
-                \Log::info('AddToCart: Guest user cart');
+                Log::info('AddToCart: Guest user cart');
                 $sessionCart = session()->get('cart', []);
-                \Log::info('AddToCart: Current session cart', $sessionCart);
+                Log::info('AddToCart: Current session cart', $sessionCart);
                 
                 $itemId = $this->item->ItemID;
                 
@@ -99,10 +100,10 @@ class AddToCart extends Component
                 }
                 
                 session()->put('cart', $sessionCart);
-                \Log::info('AddToCart: Updated session cart', $sessionCart);
+                Log::info('AddToCart: Updated session cart', $sessionCart);
             }
 
-            \Log::info('AddToCart: Dispatching cartUpdated event');
+            Log::info('AddToCart: Dispatching cartUpdated event');
             $this->dispatch('cartUpdated');
             $this->showNotification("{$this->item->Name} added to cart!", 'success');
             
@@ -110,7 +111,7 @@ class AddToCart extends Component
             $this->quantity = 1;
 
         } catch (\Exception $e) {
-            \Log::error('AddToCart: Error', ['message' => $e->getMessage()]);
+            Log::error('AddToCart: Error', ['message' => $e->getMessage()]);
             $this->showNotification('Error adding item to cart. Please try again.', 'error');
         }
 

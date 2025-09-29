@@ -53,6 +53,8 @@ class DashboardController extends Controller
         }
 
         // Enhanced user statistics
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
         $userStats = [
             'total_orders' => $user->orders()->count(),
             'total_spent' => $user->totalSpent(),

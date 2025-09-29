@@ -1,0 +1,5 @@
+# Ignore Blade templates for StyleLint
+resources/views/**/*.blade.php
+
+# These files contain conditional Tailwind CSS classes
+# that work correctly but confuse static analysis

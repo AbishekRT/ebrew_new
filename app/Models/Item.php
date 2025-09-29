@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Collections\ItemCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Item extends Model
 {
@@ -131,7 +132,7 @@ class Item extends Model
      */
     public function getFormattedPriceAttribute()
     {
-        return 'LKR ' . number_format($this->Price, 2);
+        return 'LKR ' . number_format((float) $this->Price, 2);
     }
 
     /**
@@ -162,7 +163,7 @@ class Item extends Model
      */
     public function getShortDescriptionAttribute()
     {
-        return str_limit($this->Description, 100);
+        return Str::limit($this->Description, 100);
     }
 
     /**
@@ -178,7 +179,7 @@ class Item extends Model
      */
     public function getSlugAttribute()
     {
-        return str_slug($this->Name . '-' . $this->ItemID);
+        return Str::slug($this->Name . '-' . $this->ItemID);
     }
 
     /**

@@ -50,7 +50,7 @@ class CheckoutController extends Controller
         ];
         
         // Insert order directly into database
-        $orderId = \DB::table('orders')->insertGetId([
+        $orderId = DB::table('orders')->insertGetId([
             'UserID' => $user->id,
             'OrderDate' => now(),
             'SubTotal' => $cart->total
@@ -66,7 +66,7 @@ class CheckoutController extends Controller
 
         // Create order items
         foreach ($cart->items as $cartItem) {
-            \DB::table('order_items')->insert([
+            DB::table('order_items')->insert([
                 'OrderID' => $orderId,
                 'ItemID' => $cartItem->ItemID,
                 'Quantity' => $cartItem->Quantity,
