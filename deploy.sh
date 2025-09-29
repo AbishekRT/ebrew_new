@@ -16,6 +16,7 @@ php artisan key:generate --force
 
 # Clear and cache configuration
 echo "Optimizing application..."
+php artisan config:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -24,14 +25,12 @@ php artisan view:cache
 echo "Running database migrations..."
 php artisan migrate --force
 
-# Create sessions table specifically
-echo "Creating sessions table..."
-php artisan migrate --path=database/migrations/2025_09_29_000000_create_sessions_table.php --force
-
-# Build assets
-echo "Building assets..."
-npm ci
-npm run build
+# Build assets (if package.json exists)
+if [ -f "package.json" ]; then
+    echo "Building assets..."
+    npm ci --production
+    npm run build
+fi
 
 # Set proper permissions
 chmod -R 755 storage bootstrap/cache
