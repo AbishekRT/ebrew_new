@@ -86,8 +86,11 @@
 
                     <!-- Customer Cart -->
                     @auth
-                        <livewire:cart-counter />
+                        {{-- Render a safe Cart link to avoid rendering-time exceptions in global header. --}}
+                        <a href="{{ route('cart.index') }}" class="hover:text-yellow-900 transition">Cart</a>
                     @endauth
+*** End Patch
+*** End Patch
                 @endif
             @endguest
         </div>
