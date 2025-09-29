@@ -39,9 +39,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'Role', // Use correct column name 'Role' instead of 'role'
-        'Phone', // Use correct column name 'Phone' instead of 'phone'  
-        'DeliveryAddress', // Use correct column name 'DeliveryAddress' instead of 'delivery_address'
+        'role', // Use correct column name 'role'
+        'phone', // Use correct column name 'phone'  
+        'delivery_address', // Use correct column name 'delivery_address'
         'last_login_at',
         'last_login_ip',
         'is_admin',
@@ -134,7 +134,7 @@ class User extends Authenticatable
      */
     public function scopeRole($query, $role)
     {
-        return $query->where('Role', $role); // Use correct column name
+        return $query->where('role', $role); // Use correct column name
     }
 
     /**
@@ -173,7 +173,7 @@ class User extends Authenticatable
      */
     public function scopeAdmins($query)
     {
-        return $query->where('Role', 'admin'); // Use Role column
+        return $query->where('role', 'admin'); // Use role column
     }
 
     /**
@@ -250,7 +250,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->Role === 'admin'; // Check Role column instead of is_admin
+        return $this->role === 'admin'; // Check role column instead of is_admin
     }
 
     /**

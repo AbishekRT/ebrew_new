@@ -26,7 +26,7 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
                 @forelse($products as $product)
-                    <a href="{{ route('products.show', $product->ItemID) }}" 
+                    <a href="{{ route('products.show', $product->id) }}" 
                        class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
 
                         <!-- Product Image -->

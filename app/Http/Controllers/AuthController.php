@@ -75,9 +75,9 @@ class AuthController extends Controller
             'name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'Phone' => $request->phone,
-            'DeliveryAddress' => $request->address,
-            'Role' => 'customer', // Use 'customer' instead of 'user' to match enum
+            'phone' => $request->phone,
+            'delivery_address' => $request->address,
+            'role' => 'customer', // Use 'customer' instead of 'user' to match enum
         ]);
 
         return redirect()->route('login')->with('success', 'Registration successful! Please login.');
