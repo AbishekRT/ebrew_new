@@ -3,7 +3,16 @@ builder = "nixpacks"
 
 [deploy]
 restartPolicyType = "always"
+startCommand = "bash /usr/local/bin/entrypoint.sh"
 
 [environments.production.variables]
 APP_ENV = "production"
 APP_DEBUG = "false"
+APP_URL = "https://ebrewlaravel-copy-production.up.railway.app"
+DB_CONNECTION = "mysql"
+DB_HOST = "mysql.railway.internal"
+DB_PORT = "3306"
+DB_DATABASE = "railway"
+DB_USERNAME = "root"
+SESSION_SECURE_COOKIE = "true"
+SESSION_SAME_SITE = "lax"

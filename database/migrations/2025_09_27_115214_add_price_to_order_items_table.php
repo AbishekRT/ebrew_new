@@ -16,12 +16,15 @@ return new class extends Migration
             $table->decimal('Price', 10, 2)->nullable()->after('Quantity');
         });
         
-        // Update existing order_items with current item prices
+        // Update existing order_items with current item prices (SQLite compatible)
         DB::statement('
-            UPDATE order_items oi
-            INNER JOIN items i ON oi.ItemID = i.id 
-            SET oi.Price = i.Price 
-            WHERE oi.Price IS NULL
+            UPDATE order_items 
+            SET Price = (
+                SELECT items.Price 
+                FROM items 
+                WHERE items.id = order_items.ItemID
+            )
+            WHERE order_items.Price IS NULL
         ');
     }
 
