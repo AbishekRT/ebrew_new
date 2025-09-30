@@ -26,8 +26,8 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
                 @forelse($products as $product)
-                    @if($product && $product->id)
-                        <a href="{{ route('products.show', $product->id) }}" 
+                    @if($product && $product->ItemID)
+                        <a href="{{ route('products.show', $product->ItemID) }}" 
                            class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
                     @else
                         <div class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px] cursor-not-allowed opacity-75">
@@ -50,11 +50,11 @@
                             Rs. {{ number_format($product->Price ?? 0, 2) }}
                         </p>
 
-                        @if(!$product || !$product->id)
-                            <p class="text-xs text-gray-500 mt-1">ID: {{ $product->id ?? 'Missing' }}</p>
+                        @if(!$product || !$product->ItemID)
+                            <p class="text-xs text-gray-500 mt-1">ID: {{ $product->ItemID ?? 'Missing' }}</p>
                         @endif
 
-                    @if($product && $product->id)
+                    @if($product && $product->ItemID)
                         </a>
                     @else
                         </div>

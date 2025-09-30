@@ -18,7 +18,7 @@ class ProductController extends Controller
     // Single product page
     public function show($id)
     {
-        $product = Item::find($id);
+        $product = Item::where('ItemID', $id)->first();
 
         if (!$product) {
             abort(404, 'Product not found');

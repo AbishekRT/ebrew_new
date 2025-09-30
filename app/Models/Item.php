@@ -12,7 +12,7 @@ class Item extends Model
     use HasFactory;
 
     protected $table = 'items';
-    protected $primaryKey = 'id'; // Use standard Laravel primary key
+    protected $primaryKey = 'ItemID'; // Use ItemID as primary key
     public $timestamps = false;
 
     protected $fillable = [
@@ -196,12 +196,12 @@ class Item extends Model
     
     public function cartItems()
     {
-        return $this->hasMany(CartItem::class, 'ItemID', 'id');
+        return $this->hasMany(CartItem::class, 'ItemID', 'ItemID');
     }
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class, 'ItemID', 'id');
+        return $this->hasMany(OrderItem::class, 'ItemID', 'ItemID');
     }
 
     /**
