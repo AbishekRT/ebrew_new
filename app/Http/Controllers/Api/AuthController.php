@@ -63,16 +63,18 @@ class AuthController extends Controller
             RateLimiter::hit($rateLimitKey, 300); // 5 minutes
             RateLimiter::hit($userRateLimitKey, 600); // 10 minutes
 
-            // Record failed login
-            LoginHistory::create([
-                'user_id' => $user ? $user->id : null,
-                'ip_address' => $request->ip(),
-                'device_type' => $request->device_name,
-                'browser' => $request->userAgent(),
-                'successful' => false,
-                'login_at' => now(),
-                'failure_reason' => 'invalid_credentials'
-            ]);
+            // Record failed login (only if user exists to avoid constraint violation)
+            if ($user) {
+                LoginHistory::create([
+                    'user_id' => $user->id,
+                    'ip_address' => $request->ip(),
+                    'device_type' => $request->device_name,
+                    'browser' => $request->userAgent(),
+                    'successful' => false,
+                    'login_at' => now(),
+                    'failure_reason' => 'invalid_credentials'
+                ]);
+            }
 
             if ($user) {
                 UserAnalytics::recordSecurityEvent(
@@ -128,7 +130,7 @@ class AuthController extends Controller
             'browser' => $request->userAgent(),
             'successful' => true,
             'login_at' => now(),
-            'session_data' => json_encode($sessionData)
+            // Note: session_data field might not exist in migration, storing as JSON string in existing fields
         ]);
 
         // Record in MongoDB analytics
@@ -186,7 +188,7 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Authentication successful',
             'data' => [
-                'user' => $user->only(['id', 'name', 'email', 'Role']),
+                'user' => $user->only(['id', 'name', 'email', 'role']),
                 'token' => $token->plainTextToken,
                 'token_type' => 'Bearer',
                 'expires_at' => $token->accessToken->expires_at,

@@ -20,19 +20,18 @@ class LoginHistory extends Model
         'location',
         'successful',
         'failure_reason',
+        'session_data',
         'login_at',
         'logout_at',
         'session_duration'
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'successful' => 'boolean',
-            'login_at' => 'datetime',
-            'logout_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'successful' => 'boolean',
+        'login_at' => 'datetime',
+        'logout_at' => 'datetime',
+        'session_data' => 'json',
+    ];
 
     // ========================
     // Relationships
@@ -71,8 +70,13 @@ class LoginHistory extends Model
     // Helper Methods
     // ========================
 
-    public static function createFromRequest($userId, $successful = true, $failureReason = null)
+    public static function createFromRequest($userId, $successful = true, $failureReason = null, $sessionData = null)
     {
+        // Don't create record if user_id is null (constraint violation)
+        if ($userId === null) {
+            return null;
+        }
+        
         $userAgent = Request::userAgent();
         
         return self::create([
@@ -85,6 +89,7 @@ class LoginHistory extends Model
             'location' => self::getLocationFromIp(Request::ip()),
             'successful' => $successful,
             'failure_reason' => $failureReason,
+            'session_data' => $sessionData,
             'login_at' => now(),
         ]);
     }
