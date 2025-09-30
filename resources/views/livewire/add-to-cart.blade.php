@@ -87,7 +87,7 @@
         </button>
         
         <!-- Buy Now Button -->
-        <a href="{{ route('checkout.buy-now', $item->ItemID) }}" 
+        <a href="{{ route('checkout.buy-now', ['itemId' => $item->id]) }}" 
            class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold px-6 py-2 rounded-lg transition">
             <i class="fas fa-bolt mr-2"></i>Buy Now
         </a>

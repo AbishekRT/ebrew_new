@@ -53,7 +53,7 @@
 
         <!-- Add to Cart Component -->
         <div class="mt-6">
-            <livewire:add-to-cart :item-id="$product->ItemID" />
+            <livewire:add-to-cart :item-id="$product->id" />
         </div>
 
     </div>

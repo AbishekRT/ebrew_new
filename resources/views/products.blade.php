@@ -26,8 +26,8 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 justify-items-center">
                 @forelse($products as $product)
-                    @if($product && isset($product->ItemID) && $product->ItemID)
-                        <a href="{{ route('products.show', $product->ItemID) }}" 
+                    @if($product && isset($product->id) && $product->id)
+                        <a href="{{ route('products.show', $product->id) }}" 
                            class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px]">
                     @else
                         <div class="group bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center w-full max-w-[200px] cursor-not-allowed opacity-75">
@@ -50,15 +50,9 @@
                             Rs. {{ number_format($product->Price ?? 0, 2) }}
                         </p>
 
-                        @if(!$product || !isset($product->ItemID) || !$product->ItemID)
-                            <p class="text-xs text-red-500 mt-1">
-                                Debug: ID={{ $product->ItemID ?? 'NULL' }} | 
-                                Type={{ gettype($product) }} |
-                                @if($product) Attrs={{ implode(',', array_keys($product->getAttributes() ?? [])) }} @endif
-                            </p>
-                        @endif
+                        {{-- Debug ID labels removed for cleaner UI --}}
 
-                    @if($product && isset($product->ItemID) && $product->ItemID)
+                    @if($product && isset($product->id) && $product->id)
                         </a>
                     @else
                         </div>

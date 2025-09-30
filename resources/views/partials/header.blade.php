@@ -84,13 +84,16 @@
                         </div>
                     </div>
 
-                    <!-- Customer Cart -->
+                    <!-- Customer Cart Icon -->
                     @auth
-                        {{-- Render a safe Cart link to avoid rendering-time exceptions in global header. --}}
-                        <a href="{{ route('cart.index') }}" class="hover:text-yellow-900 transition">Cart</a>
+                        <a href="{{ route('cart.index') }}" 
+                           class="hover:text-yellow-900 transition relative" 
+                           title="Shopping Cart">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5a1 1 0 00.95 1.05H19M9 19v.01M20 19v.01"></path>
+                            </svg>
+                        </a>
                     @endauth
-*** End Patch
-*** End Patch
                 @endif
             @endguest
         </div>
