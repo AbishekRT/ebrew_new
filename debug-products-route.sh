@@ -170,7 +170,7 @@ curl -s -o /dev/null -w "Debug page: %{http_code}\n" "http://localhost/products/
 echo -e "\n${GREEN}🏁 Debug Setup Complete!${NC}"
 echo "================================="
 echo -e "${YELLOW}📋 Next Steps:${NC}"
-echo "1. Visit: http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com/products/debug"
+echo "1. Visit: http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com/products/debug"
 echo "2. Check the debug information displayed"
 echo "3. Look for:"
 echo "   - Products count (should be > 0)"

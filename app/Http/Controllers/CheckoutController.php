@@ -84,21 +84,60 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
         
-        // Clear existing cart
-        $cart = Cart::where('UserID', $user->id)->first();
-        if ($cart) {
-            $cart->items()->delete();
-        } else {
-            $cart = Cart::create(['UserID' => $user->id]);
+        try {
+            // Validate item exists
+            $item = \App\Models\Item::find($itemId);
+            if (!$item) {
+                return redirect()->back()->with('error', 'Product not found.');
+            }
+            
+            // Get or create cart for user
+            $cart = Cart::firstOrCreate(['UserID' => $user->id]);
+            
+            // Clear existing cart items
+            if ($cart) {
+                $cart->items()->delete();
+                \Log::info('BuyNow: Cleared existing cart items', ['cart_id' => $cart->id]);
+            }
+            
+            // Ensure we have a valid cart ID
+            if (!$cart || !$cart->id) {
+                \Log::error('BuyNow: Cart creation failed', ['user_id' => $user->id]);
+                return redirect()->back()->with('error', 'Unable to create cart. Please try again.');
+            }
+
+            // Add single item to cart
+            $cartItem = CartItem::create([
+                'CartID' => $cart->id,
+                'ItemID' => $itemId,
+                'Quantity' => 1
+            ]);
+            
+            if (!$cartItem) {
+                \Log::error('BuyNow: CartItem creation failed', [
+                    'cart_id' => $cart->id,
+                    'item_id' => $itemId
+                ]);
+                return redirect()->back()->with('error', 'Unable to add item to cart. Please try again.');
+            }
+            
+            \Log::info('BuyNow: Item added successfully', [
+                'cart_id' => $cart->id,
+                'item_id' => $itemId,
+                'cart_item_id' => $cartItem->id
+            ]);
+
+            return redirect()->route('checkout.index');
+            
+        } catch (\Exception $e) {
+            \Log::error('BuyNow: Exception occurred', [
+                'message' => $e->getMessage(),
+                'user_id' => $user->id,
+                'item_id' => $itemId,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->back()->with('error', 'An error occurred while processing your request. Please try again.');
         }
-
-        // Add single item to cart
-        CartItem::create([
-            'CartID' => $cart->CartID,
-            'ItemID' => $itemId,
-            'Quantity' => 1
-        ]);
-
-        return redirect()->route('checkout.index');
     }
 }

@@ -1,4 +1,8 @@
-# AWS EC2 Laravel Deployment Guide
+# AWS EC2 scp -i "D:\Users\ansyp\Downloads\ebrew-key.pem" deploy-to-aws.sh ubuntu@ec2-13-60-43-49.eu-north-1.compute.amazonaws.com:~/
+
+# Copy post-deployment script
+
+scp -i "D:\Users\ansyp\Downloads\ebrew-key.pem" post-deployment-setup.sh ubuntu@ec2-13-60-43-49.eu-north-1.compute.amazonaws.com:~/vel Deployment Guide
 
 ## 🚀 Quick Deployment Steps
 
@@ -8,17 +12,17 @@ From your local machine, upload the deployment scripts:
 
 ```bash
 # Upload main deployment script
-scp -i "D:\Users\ansyp\Downloads\ebrew-key.pem" deploy-to-aws.sh ubuntu@ec2-16-171-36-211.eu-north-1.compute.amazonaws.com:~/
+scp -i "D:\Users\ansyp\Downloads\ebrew-key.pem" deploy-to-aws.sh ubuntu@ec2-13-60-43-49.eu-north-1.compute.amazonaws.com:~/
 
 # Upload post-deployment script
-scp -i "D:\Users\ansyp\Downloads\ebrew-key.pem" post-deployment-setup.sh ubuntu@ec2-16-171-36-211.eu-north-1.compute.amazonaws.com:~/
+scp -i "D:\Users\ansyp\Downloads\ebrew-key.pem" post-deployment-setup.sh ubuntu@ec2-13-60-43-49.eu-north-1.compute.amazonaws.com:~/
 ```
 
 ### 2. Connect to EC2 and Run Deployment
 
 ```bash
 # SSH into your EC2 instance
-ssh -i "D:\Users\ansyp\Downloads\ebrew-key.pem" ubuntu@ec2-16-171-36-211.eu-north-1.compute.amazonaws.com
+ssh -i "D:\Users\ansyp\Downloads\ebrew-key.pem" ubuntu@ec2-13-60-43-49.eu-north-1.compute.amazonaws.com
 
 # Make scripts executable
 chmod +x deploy-to-aws.sh post-deployment-setup.sh
@@ -34,8 +38,8 @@ chmod +x deploy-to-aws.sh post-deployment-setup.sh
 
 Your Laravel application will be available at:
 
--   **HTTP**: http://16.171.36.211
--   **HTTPS**: https://16.171.36.211 (after SSL setup)
+-   **HTTP**: http://13.60.43.49
+-   **HTTPS**: https://13.60.43.49 (after SSL setup)
 
 ---
 
@@ -105,7 +109,7 @@ If you have a domain name:
 
 1. **Point your domain to the EC2 IP**:
 
-    - Create an A record: `your-domain.com` → `16.171.36.211`
+    - Create an A record: `your-domain.com` → `13.60.43.49`
     - Create a CNAME record: `www.your-domain.com` → `your-domain.com`
 
 2. **Setup SSL certificate**:
@@ -185,7 +189,7 @@ sudo netstat -tulnp | grep :80
 
 ```bash
 # Check website response
-curl -I http://16.171.36.211
+curl -I http://13.60.43.49
 
 # Database connection test
 mysql -u ebrew_user -p -e "SELECT 1"
@@ -233,7 +237,7 @@ laravel queue:work
 
 Your deployment is successful when:
 
-1. ✅ You can access http://16.171.36.211
+1. ✅ You can access http://13.60.43.49
 2. ✅ Laravel welcome page or your app loads
 3. ✅ Database connections work
 4. ✅ No errors in `/var/www/ebrew/storage/logs/laravel.log`

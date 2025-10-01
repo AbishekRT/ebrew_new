@@ -44,7 +44,7 @@ class Cart extends Model
     {
         return $query->whereHas('items', function ($q) use ($minAmount) {
             $q->selectRaw('SUM(cart_items.Quantity * items.Price) as cart_total')
-              ->join('items', 'cart_items.ItemID', '=', 'items.ItemID')
+              ->join('items', 'cart_items.ItemID', '=', 'items.id')
               ->groupBy('cart_items.CartID')
               ->havingRaw('SUM(cart_items.Quantity * items.Price) >= ?', [$minAmount]);
         });
@@ -66,8 +66,9 @@ class Cart extends Model
 
     public function getTotalAttribute()
     {
-        return $this->items->sum(function ($item) {
-            return $item->Quantity * $item->item->Price;
+        return $this->items->sum(function ($cartItem) {
+            // Use the CartItem's total attribute which has null checks
+            return $cartItem->total ?? 0;
         });
     }
 

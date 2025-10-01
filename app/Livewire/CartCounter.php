@@ -33,7 +33,7 @@ class CartCounter extends Component
                     $cart = Cart::where('UserID', Auth::id())->first();
                     
                     if ($cart) {
-                        $this->cartCount = CartItem::where('CartID', $cart->CartID)->sum('Quantity') ?? 0;
+                        $this->cartCount = CartItem::where('CartID', $cart->id)->sum('Quantity') ?? 0;
                     } else {
                         $this->cartCount = 0;
                     }

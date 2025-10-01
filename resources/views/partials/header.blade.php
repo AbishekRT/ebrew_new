@@ -4,7 +4,7 @@
 
         @php
             $isAdminArea = request()->is('admin*');
-            $isAdmin = auth()->check() && auth()->user()->Role === 'admin';
+            $isAdmin = auth()->check() && auth()->user()->role === 'admin';
         @endphp
 
         <!-- Logo -->

@@ -29,17 +29,17 @@ class CartManager extends Component
             // Authenticated user - load from database
             $cart = Cart::firstOrCreate(['UserID' => Auth::id()]);
             
-            $this->cartItems = CartItem::where('CartID', $cart->CartID)
+            $this->cartItems = CartItem::where('CartID', $cart->id)
                 ->with('item')
                 ->get()
                 ->map(function ($cartItem) {
                     return [
-                        'id' => $cartItem->ItemID, // Use ItemID as identifier
+                        'id' => $cartItem->ItemID, // Use ItemID as identifier for database operations
                         'cart_id' => $cartItem->CartID,
                         'item_id' => $cartItem->ItemID,
                         'quantity' => $cartItem->Quantity,
                         'item' => [
-                            'ItemID' => $cartItem->item->ItemID,
+                            'id' => $cartItem->item->id, // Use item's actual primary key
                             'Name' => $cartItem->item->Name,
                             'Price' => $cartItem->item->Price,
                             'image_url' => $cartItem->item->image_url
@@ -63,7 +63,7 @@ class CartManager extends Component
                     'item_id' => $item['item_id'],
                     'quantity' => $item['quantity'],
                     'item' => [
-                        'ItemID' => $item['item_id'],
+                        'id' => $item['item_id'], // Use consistent field naming
                         'Name' => $item['name'],
                         'Price' => $item['price'],
                         'image_url' => $item['image']
@@ -105,7 +105,7 @@ class CartManager extends Component
             $cart = Cart::firstOrCreate(['UserID' => Auth::id()]);
             
             // Use direct query update for composite key table
-            $updated = CartItem::where('CartID', $cart->CartID)
+            $updated = CartItem::where('CartID', $cart->id)
                 ->where('ItemID', $cartItemId)
                 ->update(['Quantity' => $quantity]);
             
@@ -140,7 +140,7 @@ class CartManager extends Component
             $cart = Cart::firstOrCreate(['UserID' => Auth::id()]);
             
             // Get item name before deletion for notification
-            $cartItem = CartItem::where('CartID', $cart->CartID)
+            $cartItem = CartItem::where('CartID', $cart->id)
                 ->where('ItemID', $cartItemId)
                 ->with('item')
                 ->first();
@@ -149,7 +149,7 @@ class CartManager extends Component
                 $itemName = $cartItem->item->Name ?? 'Item';
                 
                 // Use direct query delete for composite key table
-                CartItem::where('CartID', $cart->CartID)
+                CartItem::where('CartID', $cart->id)
                     ->where('ItemID', $cartItemId)
                     ->delete();
                     
@@ -174,7 +174,7 @@ class CartManager extends Component
 
     public function addToCart($itemId, $quantity = 1)
     {
-        $item = Item::where('ItemID', $itemId)->first();
+        $item = Item::find($itemId);
         if (!$item) {
             $this->showNotification('Product not found', 'error');
             return;
@@ -184,7 +184,7 @@ class CartManager extends Component
             // Authenticated user - save to database
             $cart = Cart::firstOrCreate(['UserID' => Auth::id()]);
             
-            $existingCartItem = CartItem::where('CartID', $cart->CartID)
+            $existingCartItem = CartItem::where('CartID', $cart->id)
                 ->where('ItemID', $itemId)
                 ->first();
 
@@ -192,7 +192,7 @@ class CartManager extends Component
                 $existingCartItem->update(['Quantity' => $existingCartItem->Quantity + $quantity]);
             } else {
                 CartItem::create([
-                    'CartID' => $cart->CartID,
+                    'CartID' => $cart->id,
                     'ItemID' => $itemId,
                     'Quantity' => $quantity
                 ]);
@@ -227,7 +227,7 @@ class CartManager extends Component
             // Authenticated user - clear database cart
             $cart = Cart::where('UserID', Auth::id())->first();
             if ($cart) {
-                CartItem::where('CartID', $cart->CartID)->delete();
+                CartItem::where('CartID', $cart->id)->delete();
             }
         } else {
             // Guest user - clear session cart

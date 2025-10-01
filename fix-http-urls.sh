@@ -28,11 +28,11 @@ grep "^APP_URL=" .env || echo "APP_URL not found"
 
 # Update APP_URL to use HTTP with EC2 hostname
 echo "🔧 Setting APP_URL to HTTP..."
-sudo sed -i 's|^APP_URL=.*|APP_URL=http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com|' .env
+sudo sed -i 's|^APP_URL=.*|APP_URL=http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com|' .env
 
 # Also update ASSET_URL if present
 if grep -q "^ASSET_URL=" .env; then
-    sudo sed -i 's|^ASSET_URL=.*|ASSET_URL=http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com|' .env
+    sudo sed -i 's|^ASSET_URL=.*|ASSET_URL=http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com|' .env
     echo "✅ ASSET_URL updated to HTTP"
 fi
 
@@ -41,7 +41,7 @@ sudo sed -i 's|^SESSION_SECURE_COOKIE=.*|SESSION_SECURE_COOKIE=false|' .env
 
 # Update SANCTUM_STATEFUL_DOMAINS for HTTP
 if grep -q "^SANCTUM_STATEFUL_DOMAINS=" .env; then
-    sudo sed -i 's|^SANCTUM_STATEFUL_DOMAINS=.*|SANCTUM_STATEFUL_DOMAINS=ec2-16-171-36-211.eu-north-1.compute.amazonaws.com|' .env
+    sudo sed -i 's|^SANCTUM_STATEFUL_DOMAINS=.*|SANCTUM_STATEFUL_DOMAINS=ec2-13-60-43-49.eu-north-1.compute.amazonaws.com|' .env
     echo "✅ SANCTUM_STATEFUL_DOMAINS updated"
 fi
 
@@ -277,8 +277,8 @@ echo "- Apache status: $(systemctl is-active apache2)"
 
 echo ""
 echo "🔍 TEST YOUR APPLICATION:"
-echo "✅ HTTP URL: http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com/"
-echo "✅ Products: http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com/products"
+echo "✅ HTTP URL: http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com/"
+echo "✅ Products: http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com/products"
 echo "✅ IP Address: http://16.171.36.211/"
 
 echo ""

@@ -21,9 +21,21 @@ class IsAdminMiddleware
             return redirect()->route('login');
         }
 
-        // Check if user has admin role (using Role field from database)
-        if (Auth::user()->Role !== 'admin') {
-            abort(403, 'Access denied. Admin privileges required.');
+        $user = Auth::user();
+        
+        // Debug logging (remove in production)
+        \Log::info('Admin Middleware Debug', [
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'user_role' => $user->role ?? 'null',
+            'is_admin_field' => $user->is_admin ?? 'null',
+            'isAdmin_method' => $user->isAdmin(),
+            'request_url' => $request->url()
+        ]);
+
+        // Check if user has admin role (using the User model method)
+        if (!$user->isAdmin()) {
+            abort(403, 'Access denied. Admin privileges required. User: ' . $user->email . ', Role: ' . $user->role . ', isAdmin: ' . ($user->isAdmin() ? 'true' : 'false'));
         }
 
         return $next($request);

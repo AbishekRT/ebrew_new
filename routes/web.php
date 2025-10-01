@@ -152,7 +152,7 @@ Route::middleware(['auth'])->group(function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     
     // User Management
@@ -200,6 +200,24 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Temporary seeding route has been removed for security
+
+// Temporary admin test route (REMOVE IN PRODUCTION)
+Route::get('/debug/admin-test', function () {
+    $user = \App\Models\User::where('email', 'abhishake.a@gmail.com')->first();
+    if (!$user) return 'Admin user not found';
+    
+    return [
+        'user_found' => true,
+        'name' => $user->name,
+        'email' => $user->email,
+        'role' => $user->role,
+        'is_admin_field' => $user->is_admin,
+        'isAdmin_method' => $user->isAdmin(),
+        'password_test_asiri12345' => \Hash::check('asiri12345', $user->password),
+        'can_manually_login' => \Auth::loginUsingId($user->id) ? 'Success' : 'Failed',
+        'now_authenticated' => \Auth::check() ? 'Yes - User: ' . \Auth::user()->email : 'No'
+    ];
+});
 
 // Debug routes (REMOVE IN PRODUCTION)
 if (app()->environment(['local', 'staging']) || env('APP_DEBUG')) {

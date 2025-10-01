@@ -33,6 +33,17 @@ class CartItem extends Model
 
     public function getTotalAttribute()
     {
-        return $this->Quantity * $this->item->Price;
+        // Ensure item relationship exists and has valid Price
+        if (!$this->item || !$this->item->Price) {
+            \Log::warning('CartItem getTotalAttribute: Invalid item or price', [
+                'cart_item_id' => $this->id,
+                'item_id' => $this->ItemID,
+                'has_item' => $this->item !== null,
+                'item_price' => $this->item ? $this->item->Price : null
+            ]);
+            return 0;
+        }
+        
+        return $this->Quantity * (float) $this->item->Price;
     }
 }

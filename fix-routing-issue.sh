@@ -36,7 +36,7 @@ echo -e "\n${BLUE}🌐 Step 3: Fix Apache virtual host configuration${NC}"
 # Create proper Apache virtual host for Laravel
 sudo tee /etc/apache2/sites-available/laravel.conf > /dev/null <<EOF
 <VirtualHost *:80>
-    ServerName ec2-16-171-36-211.eu-north-1.compute.amazonaws.com
+    ServerName ec2-13-60-43-49.eu-north-1.compute.amazonaws.com
     DocumentRoot /var/www/html/public
 
     <Directory /var/www/html/public>
@@ -145,7 +145,7 @@ curl -s -o /dev/null -w "Register (200 expected): %{http_code}\n" "http://localh
 echo -e "\n${BLUE}🔧 Step 12: Update APP_URL in environment${NC}"
 cd $PROJECT_PATH
 # Ensure APP_URL is correct
-sed -i 's|APP_URL=.*|APP_URL=http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com|g' .env
+sed -i 's|APP_URL=.*|APP_URL=http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com|g' .env
 echo -e "${GREEN}✅ APP_URL updated${NC}"
 
 echo -e "\n${BLUE}♻️  Step 13: Final cache rebuild${NC}"
@@ -174,7 +174,7 @@ echo "✅ Verified route registration"
 echo "✅ Updated APP_URL configuration"
 echo ""
 echo -e "${BLUE}🧪 Next steps:${NC}"
-echo "1. Test the website: http://ec2-16-171-36-211.eu-north-1.compute.amazonaws.com"
+echo "1. Test the website: http://ec2-13-60-43-49.eu-north-1.compute.amazonaws.com"
 echo "2. Try clicking each navigation link (Home, Products, FAQ, Login, Register)"
 echo "3. If any issues persist, check:"
 echo "   - Security groups allow HTTP traffic on port 80"
