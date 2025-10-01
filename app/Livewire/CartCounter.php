@@ -12,7 +12,11 @@ class CartCounter extends Component
 {
     public $cartCount = 0;
 
-    protected $listeners = ['cartUpdated' => 'updateCount'];
+    protected $listeners = [
+        'cartUpdated' => 'updateCount',
+        'cartChanged' => 'updateCount',
+        'itemAddedToCart' => 'updateCount'
+    ];
 
     public function mount()
     {
@@ -68,6 +72,11 @@ class CartCounter extends Component
             }
             $this->cartCount = 0;
         }
+    }
+
+    public function forceUpdate()
+    {
+        $this->updateCount();
     }
 
     public function render()

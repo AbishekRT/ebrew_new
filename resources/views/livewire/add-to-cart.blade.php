@@ -57,6 +57,11 @@
             setTimeout(function() {
                 Livewire.find('{{ $_instance->getId() }}').call('hideNotification');
             }, 4000);
+            
+            // Dispatch custom JavaScript event for cart updates
+            window.dispatchEvent(new CustomEvent('cartUpdated', {
+                detail: { itemId: {{ $itemId }}, itemName: '{{ $item->Name }}' }
+            }));
         </script>
     @endif
 

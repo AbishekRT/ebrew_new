@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Item::orderBy('ItemID', 'desc')->get();
+        $products = Item::orderBy('id', 'desc')->get();
         
         return view('admin.products.index', compact('products'));
     }
@@ -58,16 +58,18 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified product
      */
-    public function edit(Item $product)
+    public function edit($id)
     {
+        $product = Item::findOrFail($id);
         return view('admin.products.edit', compact('product'));
     }
 
     /**
      * Update the specified product in storage
      */
-    public function update(Request $request, Item $product)
+    public function update(Request $request, $id)
     {
+        $product = Item::findOrFail($id);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -107,8 +109,9 @@ class ProductController extends Controller
     /**
      * Remove the specified product from storage
      */
-    public function destroy(Item $product)
+    public function destroy($id)
     {
+        $product = Item::findOrFail($id);
         // Delete image file if exists
         if ($product->Image) {
             $imagePath = str_replace('/storage/', '', $product->Image);

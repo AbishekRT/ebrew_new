@@ -82,6 +82,11 @@ class CheckoutController extends Controller
 
     public function buyNow($itemId)
     {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('message', 'Please login to purchase items.');
+        }
+        
         $user = Auth::user();
         
         try {

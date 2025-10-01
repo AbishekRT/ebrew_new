@@ -114,7 +114,7 @@
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($product->Image)
-                                            <img src="{{ $product->Image }}" alt="{{ $product->Name }}" class="h-16 w-16 object-cover rounded">
+                                            <img src="{{ $product->image_url }}" alt="{{ $product->Name }}" class="h-16 w-16 object-cover rounded">
                                         @else
                                             <div class="h-16 w-16 bg-gray-200 rounded flex items-center justify-center">
                                                 <span class="text-gray-400 text-xs">No Image</span>
@@ -137,11 +137,11 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('admin.products.edit', $product->ItemID) }}" 
+                                            <a href="{{ route('admin.products.edit', $product->id) }}" 
                                                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
                                                 Edit
                                             </a>
-                                            <form action="{{ route('admin.products.destroy', $product->ItemID) }}" method="POST" 
+                                            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" 
                                                   onsubmit="return confirm('Are you sure you want to delete this product?')" class="inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -166,4 +166,14 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Ensure Livewire is loaded and events work properly
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Admin products page loaded with Livewire support');
+    });
+</script>
+@endpush
+
 @endsection
