@@ -8,9 +8,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    build: {
-        manifest: 'manifest.json',
-        outDir: 'public/build',
-        emptyOutDir: true,
-    },
 });

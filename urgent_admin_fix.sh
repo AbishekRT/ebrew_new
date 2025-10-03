@@ -188,7 +188,7 @@ APP_ENV=production
 APP_KEY=base64:your-app-key-here
 APP_DEBUG=false
 APP_TIMEZONE=UTC
-APP_URL=http://13.60.43.49
+APP_URL=http://16.171.119.252
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null

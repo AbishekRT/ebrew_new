@@ -132,7 +132,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/dashboard/generate-test-data', [DashboardController::class, 'generateTestData'])->name('dashboard.generate-test-data');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -153,27 +152,8 @@ Route::middleware(['auth'])->group(function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-
-// Admin Dashboard - Simple version without middleware
-Route::get('/admin/dashboard', function() {
-    if (!auth()->check()) {
-        return redirect()->route('login');
-    }
-    
-    $user = auth()->user();
-    return view('admin.dashboard', compact('user'));
-})->name('admin.dashboard');
-
-// Fallback: Admin dashboard using controller (only auth middleware)
-Route::get('/admin/dashboard-controller', [AdminController::class, 'index'])->middleware(['auth'])->name('admin.dashboard.controller');
-
-// Test route - Admin dashboard without any middleware (for debugging)
-Route::get('/admin/test-dashboard', function() {
-    return 'Admin dashboard test - No middleware! User: ' . (auth()->check() ? auth()->user()->email : 'Not logged in');
-});
-
-// Other Admin Routes (auth only - admin middleware removed)
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     
     // User Management
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);

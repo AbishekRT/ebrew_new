@@ -8,9 +8,17 @@ use App\Models\ProductMySQL;
 use App\Models\Order;
 use App\Models\UserAnalytics;
 use App\Models\UserFavorites;
+use App\Services\CartInsightsService;
 
 class DashboardController extends Controller
 {
+    protected $cartInsightsService;
+
+    public function __construct(CartInsightsService $cartInsightsService)
+    {
+        $this->cartInsightsService = $cartInsightsService;
+    }
+
     public function index()
     {
         // Get current logged-in user
@@ -39,6 +47,10 @@ class DashboardController extends Controller
             $behaviorPatterns = UserAnalytics::getBehaviorPatterns($user->id, 30);
             $anomalyData = UserAnalytics::detectAnomalies($user->id);
             
+            // MongoDB Cart Analytics - Shopping Insights
+            $cartInsights = $this->cartInsightsService->getDashboardInsights($user->id);
+            $shoppingPatterns = $this->cartInsightsService->getShoppingPatterns($user->id);
+            
         } catch (\Exception $e) {
             // Fallback if MongoDB is not connected - still show dashboard
             $userAnalytics = [
@@ -50,6 +62,15 @@ class DashboardController extends Controller
             ];
             $behaviorPatterns = [];
             $anomalyData = ['anomaly_score' => 0];
+            
+            // Fallback cart insights
+            $cartInsights = [
+                'today' => ['sessions' => 0, 'products_viewed' => 0, 'cart_value' => 0, 'conversions' => 0],
+                'week' => ['sessions' => 0, 'avg_session_duration' => 0, 'conversion_rate' => 0, 'abandonment_rate' => 0],
+                'month' => ['total_sessions' => 0, 'total_cart_value' => 0, 'avg_products_per_session' => 0, 'favorite_shopping_hour' => 12],
+                'recommendations' => ['Start exploring our products to get personalized insights!']
+            ];
+            $shoppingPatterns = [];
         }
 
         // Enhanced user statistics
@@ -73,7 +94,26 @@ class DashboardController extends Controller
             'userAnalytics',
             'behaviorPatterns',
             'anomalyData',
-            'userStats'
+            'userStats',
+            // MongoDB cart analytics
+            'cartInsights',
+            'shoppingPatterns'
         ));
+    }
+
+    /**
+     * Generate test data for cart analytics demonstration
+     */
+    public function generateTestData(Request $request)
+    {
+        $user = Auth::user();
+        $sessionsCount = $request->input('sessions', 20);
+        
+        try {
+            $result = $this->cartInsightsService->generateTestData($user->id, $sessionsCount);
+            return redirect()->route('dashboard')->with('success', $result);
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Failed to generate test data: ' . $e->getMessage());
+        }
     }
 }

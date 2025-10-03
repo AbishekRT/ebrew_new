@@ -117,7 +117,7 @@ APP_NAME=eBrew
 APP_ENV=production
 APP_KEY=base64:your-app-key-here
 APP_DEBUG=false
-APP_URL=http://13.60.43.49
+APP_URL=http://16.171.119.252
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
